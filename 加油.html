@@ -1,0 +1,3520 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-font-scale="1">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生模拟 · 中国科大到生命终章</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+    </script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js">
+    </script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js">
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js">
+    </script>
+    <style>
+        :root {
+            --font-scale: 1;
+            --bg: #fdf8f0;
+            --bg-secondary: #faf3e6;
+            --bg-card: #fffdf8;
+            --bg-header: #fef9f3;
+            --bg-modal: #fffefb;
+            --bg-input: #fffdf7;
+            --bg-hover: #fefaf2;
+            --bg-overlay: rgba(60, 40, 20, 0.35);
+            --text: #3d3228;
+            --text-secondary: #5a4a38;
+            --text-light: #6b5e51;
+            --text-muted: #9b8c7b;
+            --text-heading: #4a3520;
+            --accent: #c4944c;
+            --accent-hover: #a87a3a;
+            --accent-light: #f0e0c8;
+            --accent-bg: #fdf0db;
+            --accent-text: #8b6914;
+            --border: #e8dcc8;
+            --border-light: #f0e8d8;
+            --border-focus: #c4944c;
+            --shadow: 0 2px 12px rgba(60, 40, 20, 0.06);
+            --shadow-sm: 0 1px 4px rgba(60, 40, 20, 0.04);
+            --shadow-md: 0 4px 20px rgba(60, 40, 20, 0.08);
+            --shadow-lg: 0 8px 32px rgba(60, 40, 20, 0.10);
+            --shadow-xl: 0 16px 48px rgba(60, 40, 20, 0.14);
+            --radius: 14px;
+            --radius-sm: 8px;
+            --radius-xs: 5px;
+            --font-serif: 'Georgia', 'Noto Serif SC', 'STSong', 'SimSun', 'Songti SC', serif;
+            --font-sans: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --danger: #c44a4a;
+            --danger-hover: #a83333;
+            --danger-bg: #fef5f5;
+            --danger-border: #f5d5d5;
+            --success: #5a9e6f;
+            --success-bg: #f2f9f4;
+            --warning: #d4a85c;
+            --warning-bg: #fef9f2;
+            --scrollbar-thumb: #dcc8a8;
+            --scrollbar-thumb-hover: #c4a880;
+            --scrollbar-track: transparent;
+            --divider: linear-gradient(90deg, transparent, #f0e8d8, transparent);
+            --progress-completed: #5a9e6f;
+            --progress-current: #c4944c;
+            --progress-upcoming: #d5ccbc;
+            /* radar-chart specific */
+            --radar-grid: #e8dcc8;
+            --radar-grid-bg: #fdf8f0;
+            --radar-fill: rgba(196, 148, 76, 0.18);
+            --radar-stroke: #c4944c;
+            --radar-dot: #c4944c;
+            --radar-dot-border: #fffdf8;
+            --radar-label: #6b5e51;
+            --radar-axis: #e8dcc8;
+            /* relationship bar colors */
+            --rel-father: #c4944c;
+            --rel-mother: #d4849c;
+            --rel-partner: #c46a6a;
+            --rel-friends: #6a9fd4;
+            --rel-children: #7ab88a;
+        }
+        [data-theme="dark"] {
+            --bg: #1a1510;
+            --bg-secondary: #151210;
+            --bg-card: #1e1812;
+            --bg-header: #1c1610;
+            --bg-modal: #221c15;
+            --bg-input: #241d15;
+            --bg-hover: #282018;
+            --bg-overlay: rgba(8, 6, 4, 0.68);
+            --text: #d4c8b8;
+            --text-secondary: #c4b8a8;
+            --text-light: #b0a494;
+            --text-muted: #8a7c6c;
+            --text-heading: #d8ccbc;
+            --accent: #d4a85c;
+            --accent-hover: #c49848;
+            --accent-light: #3a2e1c;
+            --accent-bg: #3a2e1c;
+            --accent-text: #d4a85c;
+            --border: #3a3028;
+            --border-light: #322a22;
+            --border-focus: #d4a85c;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
+            --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.30);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.34);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.38);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.44);
+            --danger: #d46a6a;
+            --danger-hover: #c44a4a;
+            --danger-bg: #2a1818;
+            --danger-border: #4a2828;
+            --success: #7ab88a;
+            --success-bg: #1a2a1e;
+            --warning: #d4a85c;
+            --warning-bg: #2a2418;
+            --scrollbar-thumb: #4a3a2a;
+            --scrollbar-thumb-hover: #5a4a38;
+            --divider: linear-gradient(90deg, transparent, #3a3028, transparent);
+            --progress-completed: #7ab88a;
+            --progress-current: #d4a85c;
+            --progress-upcoming: #4a4038;
+            --radar-grid: #3a3028;
+            --radar-grid-bg: #1e1812;
+            --radar-fill: rgba(212, 168, 92, 0.22);
+            --radar-stroke: #d4a85c;
+            --radar-dot: #d4a85c;
+            --radar-dot-border: #1a1510;
+            --radar-label: #b0a494;
+            --radar-axis: #3a3028;
+            --rel-father: #d4a85c;
+            --rel-mother: #d4849c;
+            --rel-partner: #d46a6a;
+            --rel-friends: #6a9fd4;
+            --rel-children: #7ab88a;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+        html {
+            scroll-behavior: smooth
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            line-height: 1.7;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            transition: background .4s ease, color .4s ease;
+            font-size: calc(1rem * var(--font-scale))
+        }
+        #root {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column
+        }
+        ::-webkit-scrollbar {
+            width: 6px
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-track)
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 3px
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--scrollbar-thumb-hover)
+        }
+        button {
+            font-family: var(--font-sans);
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: var(--transition-fast);
+            font-size: inherit
+        }
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            pointer-events: none
+        }
+        input,
+        textarea,
+        select {
+            font-family: var(--font-sans);
+            transition: var(--transition-fast);
+            font-size: inherit
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none
+        }
+        a:hover {
+            text-decoration: underline
+        }
+
+        .setup-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-secondary) 50%, var(--bg) 100%)
+        }
+        .setup-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 3rem 2.5rem;
+            max-width: 560px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            position: relative
+        }
+        .setup-card h1 {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            color: var(--text-heading);
+            margin-bottom: .5rem;
+            letter-spacing: .04em;
+            font-weight: 400
+        }
+        .setup-card .subtitle {
+            color: var(--text-muted);
+            font-size: .95rem;
+            margin-bottom: 2rem;
+            font-style: italic
+        }
+        .setup-card .decor-line {
+            width: 60px;
+            height: 2px;
+            background: var(--accent-light);
+            margin: 0 auto 1.5rem;
+            border-radius: 2px
+        }
+        .setup-card label {
+            display: block;
+            text-align: left;
+            font-size: .85rem;
+            color: var(--text-light);
+            margin-bottom: .4rem;
+            letter-spacing: .02em
+        }
+        .setup-card input {
+            width: 100%;
+            padding: .85rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: .95rem;
+            background: var(--bg-input);
+            color: var(--text);
+            letter-spacing: .01em
+        }
+        .setup-card input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(196, 148, 76, .12);
+            background: var(--bg-card)
+        }
+
+        .resume-card {
+            border: 2px solid var(--accent);
+            border-radius: var(--radius-sm);
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            background: var(--accent-bg);
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition)
+        }
+        .resume-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px)
+        }
+        .resume-card .resume-title {
+            font-weight: 600;
+            color: var(--accent-text);
+            margin-bottom: .5rem;
+            font-size: .9rem;
+            letter-spacing: .03em
+        }
+        .resume-card .resume-info {
+            font-size: .8rem;
+            color: var(--text-light);
+            display: flex;
+            flex-wrap: wrap;
+            gap: .6rem
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .4rem;
+            padding: .85rem 1.6rem;
+            background: var(--accent);
+            color: #fffdf7;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            letter-spacing: .04em;
+            font-weight: 500;
+            transition: var(--transition)
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 16px rgba(168, 122, 58, .3);
+            transform: translateY(-1px)
+        }
+        .btn-primary:active {
+            transform: translateY(0)
+        }
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .35rem;
+            padding: .7rem 1.3rem;
+            background: transparent;
+            color: var(--accent);
+            border: 1.5px solid var(--accent);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            letter-spacing: .03em;
+            transition: var(--transition)
+        }
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: #fffdf7;
+            box-shadow: 0 4px 14px rgba(168, 122, 58, .2)
+        }
+        .btn-danger {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            padding: .55rem 1rem;
+            background: transparent;
+            color: var(--danger);
+            border: 1.5px solid var(--danger);
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            letter-spacing: .02em;
+            transition: var(--transition)
+        }
+        .btn-danger:hover {
+            background: var(--danger);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(196, 74, 74, .2)
+        }
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            padding: .5rem .9rem;
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            letter-spacing: .02em;
+            transition: var(--transition)
+        }
+        .btn-ghost:hover {
+            background: var(--bg-hover);
+            border-color: var(--border);
+            color: var(--text)
+        }
+        .btn-sm {
+            padding: .35rem .65rem;
+            font-size: .75rem
+        }
+
+        .game-container {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: .8rem 1.2rem 3rem;
+            width: 100%
+        }
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .6rem 1.2rem;
+            background: var(--bg-header);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            margin-bottom: .5rem;
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+            gap: .4rem
+        }
+        .top-bar .meta-group {
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            flex-wrap: wrap
+        }
+        .top-bar .meta-item {
+            display: flex;
+            align-items: center;
+            gap: .3rem;
+            font-size: .82rem;
+            color: var(--text-light);
+            white-space: nowrap
+        }
+        .phase-tag {
+            background: var(--accent-bg);
+            color: var(--accent-text);
+            padding: .18rem .65rem;
+            border-radius: 100px;
+            font-size: .75rem;
+            letter-spacing: .03em;
+            white-space: nowrap;
+            font-weight: 500
+        }
+        .counter-badge {
+            background: var(--bg-secondary);
+            color: var(--text-light);
+            padding: .18rem .65rem;
+            border-radius: 100px;
+            font-size: .75rem;
+            letter-spacing: .03em;
+            white-space: nowrap
+        }
+
+        .age-progress-wrap {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin-bottom: .6rem;
+            padding: 0 .2rem
+        }
+        .age-progress-wrap .age-label {
+            font-size: .7rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            min-width: 32px;
+            text-align: center
+        }
+        .age-progress-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--border-light);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative
+        }
+        .age-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--progress-completed));
+            border-radius: 3px;
+            transition: width .6s ease
+        }
+        .age-progress-marker {
+            position: absolute;
+            top: -4px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--bg-card);
+            box-shadow: var(--shadow-sm);
+            transform: translateX(-50%);
+            transition: left .6s ease
+        }
+
+        .tool-bar {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .4rem 0;
+            margin-bottom: .5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end
+        }
+        .tool-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .25rem;
+            padding: .35rem .65rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xs);
+            font-size: .75rem;
+            color: var(--text-light);
+            cursor: pointer;
+            letter-spacing: .02em;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+            position: relative
+        }
+        .tool-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--border);
+            color: var(--text)
+        }
+        .tool-btn .shortcut-hint {
+            font-size: .6rem;
+            color: var(--text-muted);
+            background: var(--bg-secondary);
+            padding: 1px 5px;
+            border-radius: 3px;
+            margin-left: 2px
+        }
+
+        .progress-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: .8rem;
+            padding: .5rem .8rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            overflow-x: auto;
+            white-space: nowrap;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch
+        }
+        .progress-phase {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            padding: 2px 4px;
+            border-radius: var(--radius-xs)
+        }
+        .progress-phase:hover {
+            background: var(--bg-hover)
+        }
+        .progress-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .6rem;
+            flex-shrink: 0;
+            transition: var(--transition);
+            font-weight: 700
+        }
+        .progress-dot.completed {
+            background: var(--progress-completed);
+            color: #fff
+        }
+        .progress-dot.current {
+            background: var(--progress-current);
+            color: #fff;
+            animation: pulse-dot 2.2s infinite;
+            box-shadow: 0 0 0 4px rgba(196, 148, 76, .25)
+        }
+        .progress-dot.upcoming {
+            background: var(--progress-upcoming);
+            color: var(--text-muted)
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(196, 148, 76, .4)
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(196, 148, 76, 0)
+            }
+        }
+        .progress-line {
+            width: 18px;
+            height: 2px;
+            background: var(--border);
+            flex-shrink: 0;
+            margin: 0 1px 14px
+        }
+        .progress-line.completed {
+            background: var(--progress-completed)
+        }
+        .progress-label {
+            font-size: .55rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 1px;
+            max-width: 40px;
+            word-break: keep-all;
+            flex-shrink: 0;
+            line-height: 1.2
+        }
+
+        .narrative-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 1.2rem;
+            box-shadow: var(--shadow);
+            min-height: 180px;
+            position: relative
+        }
+        .narrative-card .narrative-text {
+            font-family: var(--font-serif);
+            font-size: calc(1.05rem * var(--font-scale));
+            line-height: 2;
+            color: var(--text-secondary);
+            letter-spacing: .015em;
+            white-space: pre-line;
+            word-break: break-word
+        }
+        .milestone-badge {
+            display: inline-block;
+            background: var(--accent-bg);
+            color: var(--accent-text);
+            padding: .15rem .7rem;
+            border-radius: 100px;
+            font-size: .73rem;
+            letter-spacing: .04em;
+            margin-bottom: .8rem
+        }
+        .end-badge {
+            display: inline-block;
+            background: var(--danger-bg);
+            color: var(--danger);
+            padding: .2rem .8rem;
+            border-radius: 100px;
+            font-size: .76rem;
+            letter-spacing: .05em;
+            margin-bottom: .8rem
+        }
+        .soft-divider {
+            height: 1px;
+            background: var(--divider);
+            margin: 1.2rem 0;
+            border: none
+        }
+        .choices-section {
+            margin-top: .5rem
+        }
+        .choices-header {
+            font-size: .78rem;
+            color: var(--text-muted);
+            letter-spacing: .05em;
+            margin-bottom: .7rem;
+            text-align: center
+        }
+        .choice-btn {
+            display: flex;
+            align-items: flex-start;
+            gap: .6rem;
+            width: 100%;
+            text-align: left;
+            padding: .9rem 1.2rem;
+            margin-bottom: .5rem;
+            background: var(--bg-input);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: calc(.93rem * var(--font-scale));
+            color: var(--text);
+            transition: var(--transition);
+            letter-spacing: .02em;
+            line-height: 1.5;
+            position: relative
+        }
+        .choice-btn .choice-number {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--border-light);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .72rem;
+            font-weight: 600;
+            margin-top: 1px;
+            transition: var(--transition-fast)
+        }
+        .choice-btn:hover {
+            border-color: var(--accent);
+            background: var(--bg-hover);
+            box-shadow: 0 3px 16px rgba(168, 122, 58, .1);
+            transform: translateX(3px);
+            color: var(--text-heading)
+        }
+        .choice-btn:hover .choice-number {
+            background: var(--accent);
+            color: #fff
+        }
+        .choice-btn:active {
+            transform: translateX(1px);
+            transition: .08s
+        }
+
+        .token-float {
+            position: fixed;
+            top: 20%;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-sm);
+            padding: .5rem .9rem;
+            font-size: .78rem;
+            color: var(--accent-text);
+            box-shadow: var(--shadow-md);
+            z-index: 80;
+            pointer-events: none;
+            animation: floatUp 2.5s ease-out forwards
+        }
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+            15% {
+                opacity: 1;
+                transform: translateY(0)
+            }
+            75% {
+                opacity: 1;
+                transform: translateY(-30px)
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px)
+            }
+        }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-modal);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-sm);
+            padding: .6rem 1.3rem;
+            font-size: .85rem;
+            color: var(--text);
+            box-shadow: var(--shadow-lg);
+            z-index: 150;
+            animation: toastIn .3s ease, toastOut .3s ease 1.7s forwards;
+            white-space: nowrap
+        }
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px)
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0)
+            }
+        }
+        @keyframes toastOut {
+            from {
+                opacity: 1
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px)
+            }
+        }
+        .cost-warning-banner {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning);
+            border-radius: var(--radius-sm);
+            padding: .7rem 1rem;
+            margin-bottom: .8rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .8rem;
+            color: #8b6914
+        }
+        .cost-warning-banner .dismiss {
+            margin-left: auto;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: .9rem
+        }
+        .token-info-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 1rem;
+            font-size: .68rem;
+            color: var(--text-muted);
+            padding: .2rem .4rem;
+            margin-top: -.5rem;
+            margin-bottom: .3rem;
+            font-style: italic
+        }
+        .token-info-row .cost-warn {
+            color: var(--warning);
+            font-weight: 500;
+            font-style: normal
+        }
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .6rem;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: .9rem
+        }
+        .loading-dots {
+            display: flex;
+            gap: 4px
+        }
+        .loading-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: dotPulse 1.4s infinite ease-in-out;
+            display: inline-block
+        }
+        .loading-dots span:nth-child(2) {
+            animation-delay: .2s
+        }
+        .loading-dots span:nth-child(3) {
+            animation-delay: .4s
+        }
+        @keyframes dotPulse {
+            0%,
+            80%,
+            100% {
+                opacity: .25;
+                transform: scale(.8)
+            }
+            40% {
+                opacity: 1;
+                transform: scale(1.3)
+            }
+        }
+        .retry-progress {
+            font-size: .75rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding: .3rem
+        }
+        .error-banner {
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            padding: 1rem 1.3rem;
+            border-radius: var(--radius-sm);
+            color: var(--danger);
+            font-size: .88rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: .6rem;
+            line-height: 1.5
+        }
+        .retry-link {
+            color: var(--accent);
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: .3rem;
+            font-weight: 500
+        }
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px)
+        }
+        .scroll-top-btn.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0)
+        }
+        .scroll-top-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            transform: translateY(-2px)
+        }
+        .restart-section {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 2rem 0
+        }
+        .restart-section .end-message {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-style: italic
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-overlay);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 1.5rem;
+            animation: fadeIn .2s ease
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+            to {
+                opacity: 1
+            }
+        }
+        .modal-content {
+            background: var(--bg-modal);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-xl);
+            max-width: 640px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp .25s ease
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            background: var(--bg-modal);
+            z-index: 1
+        }
+        .modal-header h3 {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            color: var(--text-heading);
+            font-weight: 400;
+            letter-spacing: .03em
+        }
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: var(--transition-fast)
+        }
+        .modal-close:hover {
+            background: var(--bg-hover);
+            color: var(--text)
+        }
+        .modal-body {
+            padding: 1.5rem
+        }
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: .6rem;
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-modal)
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: .7rem
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: .9rem;
+            text-align: center
+        }
+        .stat-card .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+            font-family: var(--font-serif)
+        }
+        .stat-card .stat-label {
+            font-size: .68rem;
+            color: var(--text-muted);
+            margin-top: .15rem;
+            letter-spacing: .03em
+        }
+        .state-bar-row {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            margin-bottom: .5rem
+        }
+        .state-bar-label {
+            width: 50px;
+            font-size: .72rem;
+            color: var(--text-light);
+            text-align: right;
+            flex-shrink: 0
+        }
+        .state-bar-track {
+            flex: 1;
+            height: 8px;
+            background: var(--border-light);
+            border-radius: 4px;
+            overflow: hidden
+        }
+        .state-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width .5s ease
+        }
+        .state-bar-fill.happiness {
+            background: #e8b84b
+        }
+        .state-bar-fill.stress {
+            background: #d46a6a
+        }
+        .state-bar-fill.health {
+            background: #6abf7b
+        }
+        .state-bar-fill.ambition {
+            background: #6a9fd4
+        }
+        .state-bar-fill.loneliness {
+            background: #9b8cbb
+        }
+        .state-bar-value {
+            width: 30px;
+            font-size: .68rem;
+            color: var(--text-muted);
+            text-align: left;
+            flex-shrink: 0
+        }
+        .timeline-list {
+            list-style: none;
+            padding: 0
+        }
+        .timeline-list li {
+            padding: .45rem 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: .82rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: baseline;
+            gap: .5rem
+        }
+        .timeline-list li:last-child {
+            border-bottom: none
+        }
+        .timeline-list .tl-time {
+            font-size: .7rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            min-width: 65px
+        }
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .7rem 0;
+            border-bottom: 1px solid var(--border-light)
+        }
+        .setting-row:last-child {
+            border-bottom: none
+        }
+        .setting-label {
+            font-size: .88rem;
+            color: var(--text)
+        }
+        .setting-desc {
+            font-size: .7rem;
+            color: var(--text-muted);
+            margin-top: .1rem
+        }
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--border);
+            border-radius: 24px;
+            transition: var(--transition)
+        }
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: var(--transition)
+        }
+        input:checked+.toggle-slider {
+            background: var(--accent)
+        }
+        input:checked+.toggle-slider::before {
+            transform: translateX(20px)
+        }
+        .font-size-options {
+            display: flex;
+            gap: .4rem
+        }
+        .font-size-btn {
+            padding: .3rem .7rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-xs);
+            font-size: .78rem;
+            cursor: pointer;
+            background: var(--bg-input);
+            color: var(--text);
+            transition: var(--transition-fast)
+        }
+        .font-size-btn.active {
+            border-color: var(--accent);
+            background: var(--accent-bg);
+            color: var(--accent-text);
+            font-weight: 600
+        }
+        .font-size-btn:hover {
+            border-color: var(--accent)
+        }
+        .save-item {
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            padding: .9rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            margin-bottom: .6rem;
+            background: var(--bg-card);
+            transition: var(--transition-fast);
+            cursor: pointer
+        }
+        .save-item:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow);
+            background: var(--bg-hover)
+        }
+        .save-item .save-icon {
+            font-size: 1.4rem;
+            flex-shrink: 0
+        }
+        .save-item .save-info {
+            flex: 1;
+            min-width: 0
+        }
+        .save-item .save-name {
+            font-weight: 500;
+            color: var(--text);
+            font-size: .9rem;
+            margin-bottom: .15rem
+        }
+        .save-item .save-meta {
+            font-size: .7rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: .5rem
+        }
+        .save-item .save-actions {
+            display: flex;
+            gap: .3rem;
+            flex-shrink: 0
+        }
+        .kbd {
+            display: inline-block;
+            padding: 2px 7px;
+            font-size: .7rem;
+            font-family: var(--font-sans);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-light);
+            letter-spacing: .03em;
+            min-width: 18px;
+            text-align: center
+        }
+        .error-boundary-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            background: var(--bg)
+        }
+        .error-boundary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--danger-border);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: var(--shadow-lg)
+        }
+        .error-boundary-card h2 {
+            color: var(--danger);
+            font-family: var(--font-serif);
+            margin-bottom: 1rem;
+            font-weight: 400
+        }
+        .life-card-preview {
+            background: linear-gradient(135deg, #fdf8f0 0%, #faf3e6 100%);
+            border: 2px solid #c4944c;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 520px;
+            max-width: 100%;
+            font-family: var(--font-serif);
+            color: #3d3228;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden
+        }
+        .life-card-preview h2 {
+            font-weight: 400;
+            letter-spacing: .05em;
+            margin-bottom: .8rem;
+            color: #4a3520
+        }
+        .life-card-preview .card-stats {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+            font-size: .85rem
+        }
+        .life-card-preview .card-stat {
+            text-align: center
+        }
+        .life-card-preview .card-stat-val {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #c4944c
+        }
+        .life-card-preview .card-milestones {
+            list-style: none;
+            padding: 0;
+            font-size: .78rem;
+            color: #5a4a38
+        }
+        .life-card-preview .card-milestones li {
+            padding: .2rem 0;
+            border-bottom: 1px dotted #e8dcc8
+        }
+        .life-card-preview .card-footer {
+            text-align: center;
+            margin-top: 1.2rem;
+            font-style: italic;
+            color: #9b8c7b;
+            font-size: .75rem
+        }
+
+        /* ═══════════ 新增：雷达图 & 成就界面增强 ═══════════ */
+        .radar-chart-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.4rem 0;
+        }
+        .radar-chart-wrap svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .stats-section-title {
+            font-family: var(--font-serif);
+            font-size: 0.92rem;
+            color: var(--text-heading);
+            margin: 1.2rem 0 0.7rem;
+            font-weight: 400;
+            letter-spacing: 0.03em;
+            text-align: center;
+        }
+        .stats-section-title:first-child {
+            margin-top: 0;
+        }
+
+        .stats-two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            margin-top: 0.8rem;
+            align-items: start;
+        }
+        @media (max-width: 640px) {
+            .stats-two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stats-col {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+        }
+        .stats-col-title {
+            font-size: 0.73rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.7rem;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /* 关系条 */
+        .rel-row {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin-bottom: 0.45rem;
+        }
+        .rel-icon {
+            font-size: 0.85rem;
+            width: 22px;
+            text-align: center;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .rel-name {
+            width: 44px;
+            font-size: 0.72rem;
+            color: var(--text-light);
+            flex-shrink: 0;
+            text-align: right;
+        }
+        .rel-track {
+            flex: 1;
+            height: 7px;
+            background: var(--border-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .rel-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .rel-fill.father {
+            background: var(--rel-father);
+        }
+        .rel-fill.mother {
+            background: var(--rel-mother);
+        }
+        .rel-fill.partner {
+            background: var(--rel-partner);
+        }
+        .rel-fill.friends {
+            background: var(--rel-friends);
+        }
+        .rel-fill.children {
+            background: var(--rel-children);
+        }
+        .rel-val {
+            width: 26px;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            text-align: left;
+            flex-shrink: 0;
+        }
+
+        /* 职业/财富标签 */
+        .info-badges {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 0.6rem;
+        }
+        .info-badge {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 100px;
+            padding: 0.2rem 0.65rem;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+        .info-badge.career {
+            border-color: var(--accent);
+            color: var(--accent-text);
+            background: var(--accent-bg);
+        }
+        .info-badge.money {
+            border-color: var(--success);
+            color: var(--success);
+            background: var(--success-bg);
+        }
+
+        /* 综合评分 */
+        .life-score-wrap {
+            text-align: center;
+            margin-top: 0.5rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid var(--border-light);
+        }
+        .life-score-label {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+            margin-bottom: 0.15rem;
+        }
+        .life-score-value {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .life-score-max {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* 雷达图tooltip模拟 - 悬停高亮 */
+        .radar-hover-zone {
+            cursor: default;
+        }
+
+        @media(max-width:640px) {
+            .setup-card {
+                padding: 2rem 1.2rem
+            }
+            .setup-card h1 {
+                font-size: 1.4rem
+            }
+            .narrative-card {
+                padding: 1.3rem 1rem
+            }
+            .narrative-card .narrative-text {
+                font-size: calc(.94rem * var(--font-scale));
+                line-height: 1.8
+            }
+            .choice-btn {
+                padding: .8rem .9rem;
+                font-size: calc(.86rem * var(--font-scale))
+            }
+            .top-bar {
+                padding: .5rem .7rem
+            }
+            .tool-bar {
+                justify-content: center
+            }
+            .tool-btn {
+                font-size: .7rem;
+                padding: .3rem .5rem
+            }
+            .tool-btn .shortcut-hint {
+                display: none
+            }
+            .modal-content {
+                max-width: 95vw;
+                max-height: 90vh
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+            .scroll-top-btn {
+                bottom: 1rem;
+                right: .8rem;
+                width: 36px;
+                height: 36px
+            }
+            .life-card-preview {
+                width: 100%;
+                padding: 1.2rem
+            }
+            .stats-two-col {
+                grid-template-columns: 1fr;
+            }
+            .radar-chart-wrap svg {
+                max-width: 240px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback, useContext, createContext, useMemo, useReducer } = React;
+        const { createRoot } = ReactDOM;
+
+        // ═══════════════ 常量配置 ═══════════════
+        const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+        const MODEL_NAME = 'deepseek-chat';
+        const TEMPERATURE = 0.85;
+        const MAX_TOKENS = 16000;
+        const MAX_RECENT_MESSAGES = 18;
+        const FORCE_COMPRESS_EVERY = 12;
+        const REQUEST_TIMEOUT_MS = 90000;
+        const MAX_RETRIES = 3;
+        const RETRY_BASE_DELAY = 1500;
+        const SAVE_VERSION = 4;
+        const SK_AUTOSAVE = 'ls_v4_auto';
+        const SK_SAVES = 'ls_v4_saves';
+        const SK_SETTINGS = 'ls_v4_cfg';
+        const SK_APIKEY = 'ls_v4_key';
+        const PRICE_IN = 0.14;
+        const PRICE_OUT = 0.28;
+
+        const PHASE_LABELS = {
+            freshman: '大一新生',
+            college: '大学时光',
+            graduation: '毕业季',
+            early_career: '职场起步',
+            marriage: '婚姻家庭',
+            midlife: '中年岁月',
+            parents_aging: '父母晚年',
+            retirement: '退休生活',
+            twilight: '暮年时光'
+        };
+        const PHASE_ORDER = ['freshman', 'college', 'graduation', 'early_career', 'marriage', 'midlife',
+            'parents_aging', 'retirement', 'twilight'
+        ];
+        const PHASE_SHORT = { freshman: '大一', college: '大学', graduation: '毕业', early_career: '职场', marriage: '婚姻',
+            midlife: '中年', parents_aging: '父母', retirement: '退休', twilight: '暮年' };
+
+        // ═══════════════ 游戏状态 ═══════════════
+        const DEFAULT_GS = {
+            happiness: 70,
+            stress: 40,
+            health: 90,
+            ambition: 60,
+            loneliness: 30,
+            relationships: { father: 80, mother: 85, partner: 0, friends: 50, children: 0 },
+            careerStage: 'student',
+            money: 'middle',
+            keyEvents: [],
+            deathRisk: 0,
+            age: 18
+        };
+
+        const STATE_RULES = {
+            workaholic: { stress: 15, happiness: -10, ambition: 12, health: -5, loneliness: 5 },
+            family_time: { happiness: 15, stress: -10, ambition: -5, loneliness: -8 },
+            social: { happiness: 10, loneliness: -12, stress: -3, ambition: 2 },
+            slacking: { happiness: -8, stress: 8, ambition: -15, loneliness: 10, health: -3 },
+            adventure: { ambition: 15, stress: 10, happiness: 5, health: -4 },
+            cautious: { stress: -10, happiness: 5, ambition: -8, health: 3 },
+            romantic: { happiness: 12, loneliness: -15, stress: 5, ambition: -3 },
+            career_focus: { ambition: 15, stress: 12, happiness: -5, loneliness: 7, health: -3 },
+            health_focus: { health: 12, stress: -8, happiness: 5, ambition: -5 },
+            isolation: { loneliness: 20, happiness: -12, stress: 8, health: -4 },
+            compromise: { stress: 8, happiness: -5, ambition: -8, loneliness: 3 }
+        };
+
+        function clamp(v) { return Math.max(0, Math.min(100, v)); }
+
+        function gsReducer(state, action) {
+            switch (action.type) {
+                case 'APPLY': {
+                    const n = { ...state };
+                    const a = action.payload.archetype;
+                    const c = action.payload.customEffects;
+                    const r = STATE_RULES[a] || {};
+                    for (const [k, d] of Object.entries(r)) {
+                        if (typeof n[k] === 'number') n[k] = clamp(n[k] + d);
+                    }
+                    if (c) {
+                        for (const [k, d] of Object.entries(c)) {
+                            if (k === 'relationships' && typeof d === 'object') {
+                                for (const [rel, rd] of Object.entries(d)) {
+                                    n.relationships[rel] = clamp((n.relationships[rel] || 0) + rd);
+                                }
+                            } else if (typeof n[k] === 'number') {
+                                n[k] = clamp(n[k] + d);
+                            }
+                        }
+                    }
+                    const age = n.age || 18;
+                    if (age > 60) n.health = Math.max(0, n.health - Math.floor((age - 60) / 15));
+                    if (age > 80) n.health = Math.max(0, n.health - 1);
+                    if (age >= 95) n.deathRisk = Math.min(50, (age - 94) * 8);
+                    else if (age >= 90) n.deathRisk = Math.min(20, (age - 89) * 5);
+                    else if (age >= 85) n.deathRisk = Math.min(8, age - 84);
+                    else if (age >= 80) n.deathRisk = Math.min(3, age - 79);
+                    else n.deathRisk = 0;
+                    if (n.health < 15) n.deathRisk += 3;
+                    if (n.health < 8) n.deathRisk += 8;
+                    n.happiness = clamp(n.happiness);
+                    n.stress = clamp(n.stress);
+                    n.health = clamp(n.health);
+                    n.ambition = clamp(n.ambition);
+                    n.loneliness = clamp(n.loneliness);
+                    return n;
+                }
+                case 'SET':
+                    return { ...state, ...action.payload };
+                case 'ADD_EVENT':
+                    return { ...state, keyEvents: [...state.keyEvents, action.payload] };
+                case 'REL': {
+                    const rels = { ...state.relationships };
+                    rels[action.payload.key] = clamp((rels[action.payload.key] || 0) + action.payload.delta);
+                    return { ...state, relationships: rels };
+                }
+                case 'CAREER':
+                    return { ...state, careerStage: action.payload };
+                case 'MONEY':
+                    return { ...state, money: action.payload };
+                case 'RESTORE':
+                    return { ...DEFAULT_GS, ...action.payload };
+                default:
+                    return state;
+            }
+        }
+
+        function checkTriggers(s, age) {
+            const t = [];
+            if (s.stress > 85 && s.health < 50)
+                t.push({ type: 'health_crisis', sev: 'high', desc: '心理与身体双重崩溃风险' });
+            if (s.loneliness > 75 && (s.relationships.partner || 0) < 30 && age > 25)
+                t.push({ type: 'relationship_crisis', sev: 'medium', desc: '感情空洞与婚姻危机' });
+            if (s.health < 35)
+                t.push({ type: 'major_illness', sev: 'high', desc: '重大健康问题' });
+            if (s.happiness < 25)
+                t.push({ type: 'depression_risk', sev: 'medium', desc: '人生低谷与抑郁风险' });
+            if (s.ambition > 85 && s.stress > 70)
+                t.push({ type: 'overwork_risk', sev: 'medium', desc: '过劳与职业高压' });
+            if (age >= 65 && s.health < 60)
+                t.push({ type: 'aging_concern', sev: 'low', desc: '身体机能下降' });
+            return t;
+        }
+
+        function shouldDie(state, age, choiceCount) {
+            if (choiceCount < 120 && age < 95) return { trigger: false, reason: null, prob: 0 };
+            if (age >= 98) return { trigger: true, reason: 'natural', prob: 0.9 };
+            if (age >= 95) return { trigger: Math.random() < state.deathRisk / 100, reason: 'natural', prob: state
+                    .deathRisk / 100 };
+            if (state.health < 5) return { trigger: Math.random() < 0.15, reason: 'health_failure', prob: 0.15 };
+            if (state.health < 3) return { trigger: Math.random() < 0.4, reason: 'health_failure', prob: 0.4 };
+            if (state.happiness < 3 && state.stress > 95 && state.loneliness > 90)
+                return { trigger: Math.random() < 0.08, reason: 'despair', prob: 0.08 };
+            return { trigger: false, reason: null, prob: 0 };
+        }
+
+        // ═══════════════ 工具函数 ═══════════════
+        function uid() { return 'sv_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8); }
+
+        function parseJSON(raw) {
+            if (!raw || typeof raw !== 'string') return null;
+            let t = raw.trim();
+            const m = t.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+            if (m) t = m[1].trim();
+            try { return JSON.parse(t); } catch (e) {}
+            const j = t.match(/\{[\s\S]*\}/);
+            if (j) {
+                try { return JSON.parse(j[0]); } catch (e) {}
+                let fix = j[0];
+                let openB = 0,
+                    openS = 0;
+                for (let c of fix) {
+                    if (c === '{') openB++;
+                    if (c === '}') openB--;
+                    if (c === '[') openS++;
+                    if (c === ']') openS--;
+                }
+                while (openS > 0) { fix += ']';
+                    openS--; }
+                while (openB > 0) { fix += '}';
+                    openB--; }
+                try { return JSON.parse(fix); } catch (e2) {}
+            }
+            const narrMatch = t.match(/"narrative"\s*:\s*"([\s\S]*?)(?:"\s*,\s*"|\s*$)/);
+            if (narrMatch) {
+                return {
+                    narrative: narrMatch[1].replace(/\\n/g, '\n\n').replace(/\\"/g, '"'),
+                    choices: [],
+                    age: 18,
+                    time: '?',
+                    phase: 'college',
+                    milestone: null,
+                    isEnd: false
+                };
+            }
+            return null;
+        }
+
+        function validGD(d) {
+            if (!d || typeof d !== 'object') return false;
+            if (typeof d.narrative !== 'string' || d.narrative.length < 20) return false;
+            if (typeof d.age !== 'number') return false;
+            if (d.isEnd === true) return true;
+            if (!Array.isArray(d.choices)) return false;
+            d.choices = d.choices.filter(function(c) {
+                return c && typeof c.text === 'string' && c.text.trim().length > 0;
+            });
+            return d.choices.length >= 2;
+        }
+
+        function makeFallbackChoices(narrative, age, phase) {
+            const base = [
+                { text: '继续前行，看看生活会带来什么' },
+                { text: '停下来想一想，整理自己的内心' },
+                { text: '找人聊聊，听听别人的看法' },
+                { text: '换个方向试试，也许会有转机' }
+            ];
+            if (age < 22) return [
+                { text: '认真做好眼前的事' },
+                { text: '去图书馆待一会儿' },
+                { text: '约朋友出去走走' },
+                { text: '给自己放个小假' }
+            ];
+            if (age < 30) return [
+                { text: '全力以赴投入工作' },
+                { text: '抽出时间陪陪身边的人' },
+                { text: '想想自己真正想要什么' },
+                { text: '先稳住再说' }
+            ];
+            return base;
+        }
+
+        function maskKey(k) { return (!k || k.length < 12) ? (k || '') : k.slice(0, 5) + '......' + k.slice(-4); }
+
+        function enc(t) {
+            if (!t) return '';
+            const k = 'ls_xor_4k';
+            let r = '';
+            for (let i = 0; i < t.length; i++) r += String.fromCharCode(t.charCodeAt(i) ^ k.charCodeAt(i % k.length));
+            return btoa(r);
+        }
+
+        function dec(e) {
+            if (!e) return '';
+            try {
+                const d = atob(e);
+                const k = 'ls_xor_4k';
+                let r = '';
+                for (let i = 0; i < d.length; i++) r += String.fromCharCode(d.charCodeAt(i) ^ k.charCodeAt(i % k
+                .length));
+                return r;
+            } catch (er) { return ''; }
+        }
+
+        function estCost(pt, ct) { return (pt / 1e6) * PRICE_IN + (ct / 1e6) * PRICE_OUT; }
+
+        function fmtCost(y) { return y < 0.01 ? '<0.01' : y.toFixed(y < 1 ? 2 : 1) + '元'; }
+
+        function fmtDate(iso) {
+            if (!iso) return '?';
+            const d = new Date(iso),
+                n = new Date(),
+                dm = Math.floor((n - d) / 6e4);
+            if (dm < 1) return '刚刚';
+            if (dm < 60) return dm + '分前';
+            if (dm < 1440) return Math.floor(dm / 60) + '时前';
+            if (dm < 10080) return Math.floor(dm / 1440) + '天前';
+            return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function archetype(txt) {
+            const t = txt.toLowerCase();
+            if (/工作|加班|项目|职业|升职|事业|奋斗|拼搏|竞争/.test(t)) return 'workaholic';
+            if (/家人|父母|回家|陪伴|家庭|孩子|爸妈/.test(t)) return 'family_time';
+            if (/朋友|聚会|社交|出去玩|一起|见面/.test(t)) return 'social';
+            if (/休息|躺|放弃|不管|算了|随便|无所谓|逃避/.test(t)) return 'slacking';
+            if (/冒险|尝试|创业|辞职|旅行|远方|闯/.test(t)) return 'adventure';
+            if (/稳定|安全|保守|谨慎|保险|稳妥/.test(t)) return 'cautious';
+            if (/恋爱|表白|追求|约会|感情|在一起/.test(t)) return 'romantic';
+            if (/进修|学习|考证|考试|学历|深造/.test(t)) return 'career_focus';
+            if (/锻炼|运动|健康|体检|养生|饮食/.test(t)) return 'health_focus';
+            if (/独自|一个人|独处|宅|封闭|拒绝/.test(t)) return 'isolation';
+            if (/妥协|让步|算了|将就|凑合|忍/.test(t)) return 'compromise';
+            return 'cautious';
+        }
+
+        // ═══════════════ 主题上下文 ═══════════════
+        const ThemeCtx = createContext(null);
+
+        function ThemeP({ children }) {
+            const [cfg, setCfg] = useState(function() {
+                try {
+                    const r = localStorage.getItem(SK_SETTINGS);
+                    return r ? JSON.parse(r) : { theme: 'light', fontSize: '1', costWarn: 50, shortcuts: true,
+                        autoFreq: 'every5' };
+                } catch (e) {
+                    return { theme: 'light', fontSize: '1', costWarn: 50, shortcuts: true, autoFreq: 'every5' };
+                }
+            });
+
+            const upd = useCallback(function(partial) {
+                setCfg(function(prev) {
+                    const next = { ...prev, ...partial };
+                    try { localStorage.setItem(SK_SETTINGS, JSON.stringify(next)); } catch (e) {}
+                    return next;
+                });
+            }, []);
+
+            useEffect(function() {
+                document.documentElement.setAttribute('data-theme', cfg.theme);
+                document.documentElement.setAttribute('data-font-scale', cfg.fontSize);
+            }, [cfg.theme, cfg.fontSize]);
+
+            const tog = useCallback(function() {
+                upd({ theme: cfg.theme === 'light' ? 'dark' : 'light' });
+            }, [cfg.theme, upd]);
+
+            const v = useMemo(function() {
+                return { theme: cfg.theme, toggleTheme: tog, settings: cfg, updateSettings: upd };
+            }, [cfg, tog, upd]);
+
+            return React.createElement(ThemeCtx.Provider, { value: v }, children);
+        }
+
+        function useTheme() { return useContext(ThemeCtx); }
+
+        // ═══════════════ 游戏状态 Hook ═══════════════
+        function useGameState(init) {
+            const [s, dispatch] = useReducer(gsReducer, init || DEFAULT_GS);
+
+            const apply = useCallback(function(txt, custom) {
+                const a = archetype(txt);
+                dispatch({ type: 'APPLY', payload: { archetype: a, customEffects: custom } });
+                return a;
+            }, []);
+
+            const addEv = useCallback(function(e) { dispatch({ type: 'ADD_EVENT', payload: e }); }, []);
+            const rel = useCallback(function(k, d) { dispatch({ type: 'REL', payload: { key: k, delta: d } }); }, []);
+            const setCar = useCallback(function(v) { dispatch({ type: 'CAREER', payload: v }); }, []);
+            const setMon = useCallback(function(v) { dispatch({ type: 'MONEY', payload: v }); }, []);
+            const restore = useCallback(function(v) { dispatch({ type: 'RESTORE', payload: v }); }, []);
+
+            const summary = useCallback(function(cc) {
+                const a = s.age || 18;
+                return { ...s, triggers: checkTriggers(s, a), deathCheck: shouldDie(s, a, cc) };
+            }, [s]);
+
+            return {
+                state: s,
+                dispatch,
+                applyChoiceEffects: apply,
+                addKeyEvent: addEv,
+                updateRelationship: rel,
+                setCareer: setCar,
+                setMoney: setMon,
+                restoreState: restore,
+                getStateSummary: summary
+            };
+        }
+
+        // ═══════════════ 存档 Hook ═══════════════
+        function useGameSave() {
+            const [saves, setSaves] = useState(function() {
+                try { const r = localStorage.getItem(SK_SAVES);
+                    return r ? JSON.parse(r) : []; } catch (e) { return []; }
+            });
+            const [auto, setAuto] = useState(function() {
+                try { const r = localStorage.getItem(SK_AUTOSAVE);
+                    return r ? JSON.parse(r) : null; } catch (e) { return null; }
+            });
+
+            const pSaves = useCallback(function(u) {
+                setSaves(u);
+                try { localStorage.setItem(SK_SAVES, JSON.stringify(u)); } catch (e) {}
+            }, []);
+            const pAuto = useCallback(function(d) {
+                setAuto(d);
+                try { localStorage.setItem(SK_AUTOSAVE, JSON.stringify(d)); } catch (e) {}
+            }, []);
+
+            const create = useCallback(function(nm, gd, cv, sm, cc, st, gs) {
+                const sv = {
+                    id: uid(),
+                    name: nm || '存档',
+                    gameData: gd,
+                    conversationHistory: cv,
+                    summary: sm,
+                    choiceCount: cc,
+                    stats: st || {},
+                    gameState: gs || DEFAULT_GS,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    version: SAVE_VERSION
+                };
+                pSaves([sv, ...saves]);
+                return sv;
+            }, [saves, pSaves]);
+
+            const upd = useCallback(function(id, u) {
+                const nu = saves.map(function(s) {
+                    return s.id === id ? { ...s, ...u, updatedAt: new Date().toISOString() } : s;
+                });
+                pSaves(nu);
+            }, [saves, pSaves]);
+
+            const del = useCallback(function(id) { pSaves(saves.filter(function(s) { return s.id !== id; })); }, [saves,
+                pSaves
+            ]);
+            const ren = useCallback(function(id, n) { upd(id, { name: n }); }, [upd]);
+
+            const exp = useCallback(function(sv) {
+                const b = new Blob([JSON.stringify(sv, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(b);
+                a.download = 'life_' + (sv.name || 'save').replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_') + '.json';
+                a.click();
+            }, []);
+
+            const imp = useCallback(function(file) {
+                return new Promise(function(res, rej) {
+                    const r = new FileReader();
+                    r.onload = function(e) {
+                        try {
+                            const d = JSON.parse(e.target.result);
+                            if (!d.gameData) { rej(new Error('无效存档'));
+                                return; }
+                            d.id = uid();
+                            d.importedAt = new Date().toISOString();
+                            d.updatedAt = new Date().toISOString();
+                            pSaves([d, ...saves]);
+                            res(d);
+                        } catch (er) { rej(new Error('解析失败')); }
+                    };
+                    r.onerror = function() { rej(new Error('读取失败')); };
+                    r.readAsText(file);
+                });
+            }, [saves, pSaves]);
+
+            const clr = useCallback(function() {
+                pSaves([]);
+                try { localStorage.removeItem(SK_AUTOSAVE); } catch (e) {}
+                setAuto(null);
+            }, [pSaves]);
+
+            return {
+                saves,
+                autoSave: auto,
+                createSave: create,
+                updateSave: upd,
+                deleteSave: del,
+                renameSave: ren,
+                exportSave: exp,
+                importSave: imp,
+                persistAutoSave: pAuto,
+                clearAllSaves: clr,
+                hasAnySave: saves.length > 0 || auto !== null
+            };
+        }
+
+        // ═══════════════ 错误边界 ═══════════════
+        class EB extends React.Component {
+            constructor(p) { super(p);
+                this.state = { has: false, err: null }; }
+            static getDerivedStateFromError(e) { return { has: true, err: e }; }
+            render() {
+                if (this.state.has) {
+                    return React.createElement('div', { className: 'error-boundary-container' },
+                        React.createElement('div', { className: 'error-boundary-card' },
+                            React.createElement('h2', null, '出错了'),
+                            React.createElement('p', { style: { color: 'var(--text-light)', marginBottom: '1.2rem',
+                                    fontSize: '0.9rem' } }, '应用遇到意外错误。'),
+                            React.createElement('button', { className: 'btn-primary', onClick: function() { window
+                                    .location.reload(); } }, '刷新页面'),
+                            React.createElement('button', { className: 'btn-secondary', style: { marginLeft: '0.6rem' },
+                                onClick: function() { try { localStorage.clear(); } catch (e) {} window.location
+                                    .reload(); } }, '清除并刷新')
+                        )
+                    );
+                }
+                return this.props.children;
+            }
+        }
+
+        // ═══════════════ 弹窗组件 ═══════════════
+        function Modal({ isOpen, onClose, title, children, footer, wide }) {
+            if (!isOpen) return null;
+            useEffect(function() {
+                var h = function(e) { if (e.key === 'Escape') onClose(); };
+                document.addEventListener('keydown', h);
+                return function() { document.removeEventListener('keydown', h); };
+            }, [onClose]);
+
+            return React.createElement('div', { className: 'modal-overlay', onClick: function(e) { if (e.target === e
+                        .currentTarget) onClose(); } },
+                React.createElement('div', { className: 'modal-content', style: wide ? { maxWidth: '720px' } : {} },
+                    React.createElement('div', { className: 'modal-header' },
+                        React.createElement('h3', null, title),
+                        React.createElement('button', { className: 'modal-close', onClick: onClose }, '\u2715')
+                    ),
+                    React.createElement('div', { className: 'modal-body' }, children),
+                    footer ? React.createElement('div', { className: 'modal-footer' }, footer) : null
+                )
+            );
+        }
+
+        // ═══════════════ 系统提示词 ═══════════════
+        function bsp(gs, age, phase, cc) {
+            var h = gs.happiness,
+                s = gs.stress,
+                he = gs.health,
+                a = gs.ambition,
+                l = gs.loneliness;
+            return '你是深谙人生的文学性故事讲述者与严肃人生反思者。推动中科大新生(18岁起)完整人生故事。第二人称"你"。\n\n' +
+                '【当前状态(融入叙事勿直提数字)】\n' +
+                '幸福:' + h + '/100 ' + (h < 30 ? '(低谷)' : h > 75 ? '(充实)' : '(中)') + ' ' +
+                '压力:' + s + '/100 ' + (s > 75 ? '(高压)' : s < 30 ? '(轻松)' : '(正常)') + ' ' +
+                '健康:' + he + '/100 ' + (he < 40 ? '(欠佳)' : he > 75 ? '(良好)' : '(一般)') + ' ' +
+                '野心:' + a + '/100 孤独:' + l + '/100\n' +
+                '关系:' + JSON.stringify(gs.relationships || {}) + ' 职业:' + (gs.careerStage || 'student') + ' 财富:' + (gs
+                    .money || 'middle') + '\n' +
+                '当前年龄:' + age + ' 已做选择:' + (cc || 0) + '次 关键事件:' + (gs.keyEvents || []).slice(-8).join(',') +
+                '\n\n' +
+                '【核心规则 - 必须遵守】\n' +
+                '1. 这是一个超长篇人生模拟，目标是200次以上的选择。时间推进必须非常缓慢！大学四年至少需要30-40次选择，每个学期都应有详细场景。工作阶段每年1-3次选择即可。\n' +
+                '2. 每幕叙事1500-3000字，分多段(用\\n\\n分隔)。烟火气、感官细节、时代背景(2027年起)、口语对话用「」。内心独白要真诚。\n' +
+                '3. 每次给出4-6个选项，20-50字。选项必须从情境自然生长，覆盖不同价值观路径，无好坏之分。选项文字必须具体有内容，禁止空泛选项。\n' +
+                '4. 不要过早触发重大人生变故。20-30岁时重点是日常、学业、恋爱、友情的细腻展开，不要急着推进到结婚生子。\n' +
+                '5. 已做选择不足120次时，不要触发死亡或濒死场景。让故事有足够空间展开。\n\n' +
+                '【终局规则】当isEnd为true时：\n' +
+                'narrative包含四部分(2000-3500字)：\n' +
+                '一、死亡场景(200-300字)：具体场景、环境、身体感受、最后意识片段\n' +
+                '二、人生回顾(400-600字)：关键时刻闪回、重要他人身影、遗憾与满足、生命意义思考\n' +
+                '三、人生点评(700-1000字)：时间线、重大抉择分析、关系演变、职业成就、总体评价\n' +
+                '四、批判性成长反思(600-1000字)：理性反思关键选择的价值观、识别人生陷阱、错过的机会、深层启示、写给活着的人的话。要敢于直言，不粉饰，深刻剖析。\n\n' +
+                '【输出格式】严格JSON，禁止输出任何JSON以外的文本：\n' +
+                '{"time":"时间标记","age":数字,"phase":"阶段","narrative":"叙事正文","choices":[{"text":"选项文字"},...],"milestone":"节点或null","isEnd":false}';
+        }
+
+        // ═══════════════ 子组件 ═══════════════
+        function ApiKeySetup({ onKeySet, hasSaves, onContinueGame, autoSave, saves }) {
+            var _a = useState(''),
+                key = _a[0],
+                setKey = _a[1];
+            var _b = useState(false),
+                show = _b[0],
+                setShow = _b[1];
+            var _c = useTheme(),
+                theme = _c.theme,
+                toggleTheme = _c.toggleTheme;
+
+            var latest = useMemo(function() {
+                var all = [].concat(saves);
+                if (autoSave) all.unshift(Object.assign({}, autoSave, { name: '自动存档', isAuto: true }));
+                all.sort(function(a, b) { return new Date(b.updatedAt) - new Date(a.updatedAt); });
+                return all[0] || null;
+            }, [saves, autoSave]);
+
+            var submit = function(e) {
+                e.preventDefault();
+                var t = key.trim();
+                if (t && t.startsWith('sk-') && t.length > 20) {
+                    try { sessionStorage.setItem(SK_APIKEY, enc(t)); } catch (e) {}
+                    onKeySet(t);
+                } else {
+                    alert('请输入有效的API Key（以sk-开头）。');
+                }
+            };
+
+            return React.createElement('div', { className: 'setup-container' },
+                React.createElement('div', { className: 'setup-card' },
+                    React.createElement('button', { className: 'btn-ghost', style: { position: 'absolute', top: '1rem',
+                            right: '1rem' }, onClick: toggleTheme },
+                        theme === 'light' ? '暗色模式' : '亮色模式'),
+                    React.createElement('h1', null, '人生模拟'),
+                    React.createElement('p', { className: 'subtitle' }, '从中国科大新生到生命终章'),
+                    React.createElement('div', { className: 'decor-line' }),
+                    latest && React.createElement('div', { className: 'resume-card', onClick: onContinueGame },
+                        React.createElement('div', { className: 'resume-title' }, '上次游戏进度'),
+                        React.createElement('div', { className: 'resume-info' },
+                            React.createElement('span', null, latest.gameData && latest.gameData.age || '?', ' 岁'),
+                            React.createElement('span', null, PHASE_LABELS[latest.gameData && latest.gameData.phase] ||
+                                '未知'),
+                            React.createElement('span', null, latest.choiceCount, ' 次'),
+                            React.createElement('span', null, fmtDate(latest.updatedAt))
+                        )
+                    ),
+                    hasSaves && !latest && React.createElement('button', { className: 'btn-secondary',
+                        onClick: onContinueGame, style: { width: '100%', marginBottom: '0.8rem' } }, '浏览所有存档'),
+                    !show ?
+                    React.createElement('button', { className: 'btn-primary', onClick: function() { setShow(true); },
+                        style: { width: '100%' } }, '开始新的人生旅程') :
+                    React.createElement('form', { onSubmit: submit },
+                        React.createElement('label', null, 'DeepSeek API Key'),
+                        React.createElement('input', { type: 'password', placeholder: 'sk-...', value: key,
+                            onChange: function(e) { setKey(e.target.value); }, autoFocus: true }),
+                        React.createElement('button', { type: 'submit', className: 'btn-primary', style: { width: '100%',
+                                marginTop: '1rem' } }, '进入游戏')
+                    ),
+                    React.createElement('p', { style: { marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' } },
+                        '需要 DeepSeek API Key。前往 ',
+                        React.createElement('a', { href: 'https://platform.deepseek.com/api_keys', target: '_blank',
+                            rel: 'noopener' }, 'platform.deepseek.com'),
+                        ' 获取。'
+                    )
+                )
+            );
+        }
+
+        function SaveMgr({ isOpen, onClose, saves, autoSave, onLoad, onDel, onRen, onExp, onImp, onClr, running }) {
+            var _a = useState(null),
+                rid = _a[0],
+                setRid = _a[1];
+            var _b = useState(''),
+                rv = _b[0],
+                setRv = _b[1];
+            var fr = useRef(null);
+
+            var all = useMemo(function() {
+                var l = [].concat(saves);
+                if (autoSave && running && !l.find(function(s) { return s.id === autoSave.id; }))
+                    l.unshift(Object.assign({}, autoSave, { name: '自动存档', isAuto: true }));
+                return l;
+            }, [saves, autoSave, running]);
+
+            return React.createElement(Modal, { isOpen: isOpen, onClose: onClose, title: '存档管理',
+                footer: React.createElement(React.Fragment, null,
+                    React.createElement('button', { className: 'btn-ghost btn-sm', onClick: function() { if (fr
+                                .current) fr.current.click(); } }, '导入'),
+                    React.createElement('input', { ref: fr, type: 'file', accept: '.json', style: { display: 'none' },
+                        onChange: async function(e) {
+                            var f = e.target.files && e.target.files[0];
+                            if (f) { try { await onImp(f); } catch (er) { alert('导入失败：' + er.message); } }
+                            if (fr.current) fr.current.value = '';
+                        }
+                    }),
+                    React.createElement('button', { className: 'btn-danger btn-sm', onClick: function() { if (
+                                confirm('删除所有存档？')) onClr(); } }, '清除全部'),
+                    React.createElement('button', { className: 'btn-secondary btn-sm', onClick: onClose }, '关闭')
+                )
+            },
+                all.length === 0 ?
+                React.createElement('p', { style: { color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' } },
+                    '暂无存档。') :
+                all.map(function(s) {
+                    return React.createElement('div', { key: s.id, className: 'save-item',
+                            onClick: function() { if (rid !== s.id) onLoad(s); } },
+                        React.createElement('div', { className: 'save-icon' }, s.isAuto ? 'O' : 'S'),
+                        React.createElement('div', { className: 'save-info' },
+                            rid === s.id ?
+                            React.createElement('input', {
+                                value: rv,
+                                onChange: function(e) { setRv(e.target.value); },
+                                onKeyDown: function(e) {
+                                    if (e.key === 'Enter') { if (rv.trim()) onRen(s.id, rv.trim());
+                                        setRid(null);
+                                        setRv(''); }
+                                    if (e.key === 'Escape') { setRid(null);
+                                        setRv(''); }
+                                },
+                                onBlur: function() { if (rv.trim()) onRen(s.id, rv.trim());
+                                    setRid(null);
+                                    setRv(''); },
+                                autoFocus: true,
+                                style: { width: '100%', padding: '0.3rem', border: '1.5px solid var(--accent)',
+                                    borderRadius: 'var(--radius-xs)', background: 'var(--bg-input)',
+                                    color: 'var(--text)' },
+                                onClick: function(e) { e.stopPropagation(); }
+                            }) :
+                            React.createElement('div', { className: 'save-name' }, s.name),
+                            React.createElement('div', { className: 'save-meta' },
+                                React.createElement('span', null, s.gameData && s.gameData.age || '?', '岁'),
+                                React.createElement('span', null, PHASE_LABELS[s.gameData && s.gameData.phase] ||
+                                    '未知'),
+                                React.createElement('span', null, s.choiceCount, '次'),
+                                React.createElement('span', null, fmtDate(s.updatedAt))
+                            )
+                        ),
+                        React.createElement('div', { className: 'save-actions', onClick: function(e) { e
+                                .stopPropagation(); } },
+                            !s.isAuto && React.createElement('button', { className: 'btn-ghost btn-sm',
+                                title: '重命名', onClick: function() { setRid(s.id);
+                                    setRv(s.name); } }, '改名'),
+                            React.createElement('button', { className: 'btn-ghost btn-sm', title: '导出',
+                                onClick: function() { onExp(s); } }, '导出'),
+                            !s.isAuto && React.createElement('button', { className: 'btn-ghost btn-sm',
+                                title: '删除', style: { color: 'var(--danger)' }, onClick: function() { if (
+                                        confirm('删除？')) onDel(s.id); } }, '删除')
+                        )
+                    );
+                })
+            );
+        }
+
+        // ═══════════════ 雷达图组件 (新增) ═══════════════
+        function RadarChart({ data, labels, size, theme }) {
+            // 安全兜底
+            if (!data || !Array.isArray(data) || data.length === 0) {
+                return React.createElement('div', { className: 'radar-chart-wrap' },
+                    React.createElement('p', { style: { fontSize: '0.8rem', color: 'var(--text-muted)',
+                            textAlign: 'center', padding: '1rem' } }, '暂无属性数据')
+                );
+            }
+            const n = data.length;
+            const cx = size / 2;
+            const cy = size / 2;
+            const radius = size * 0.33;
+            const angleStep = (2 * Math.PI) / n;
+
+            // 计算坐标：value=0-100, index=顶点序号, r=最大半径
+            const getPt = function(value, index, r) {
+                const angle = angleStep * index - Math.PI / 2; // 从顶部开始
+                const dist = Math.max(0, Math.min(1, (value || 0) / 100)) * r;
+                return {
+                    x: cx + dist * Math.cos(angle),
+                    y: cy + dist * Math.sin(angle)
+                };
+            };
+
+            const isDark = theme === 'dark';
+            const gridColor = isDark ? '#3a3028' : '#e8dcc8';
+            const gridBgEven = isDark ? '#1e1812' : '#fdf8f0';
+            const dataFill = isDark ? 'rgba(212,168,92,0.22)' : 'rgba(196,148,76,0.18)';
+            const dataStroke = isDark ? '#d4a85c' : '#c4944c';
+            const dotFill = isDark ? '#d4a85c' : '#c4944c';
+            const dotStroke = isDark ? '#1a1510' : '#fffdf8';
+            const labelColor = isDark ? '#b0a494' : '#6b5e51';
+
+            // 网格层级
+            const gridLevels = [0.2, 0.4, 0.6, 0.8, 1.0];
+
+            // 构建网格多边形点集
+            const gridPolygons = gridLevels.map(function(level) {
+                return Array.from({ length: n }, function(_, i) {
+                    var pt = getPt(100 * level, i, radius);
+                    return pt.x + ',' + pt.y;
+                }).join(' ');
+            });
+
+            // 数据多边形
+            const dataPolygon = Array.from({ length: n }, function(_, i) {
+                var pt = getPt(data[i] || 0, i, radius);
+                return pt.x + ',' + pt.y;
+            }).join(' ');
+
+            // 轴线 & 数据点
+            const axisLines = Array.from({ length: n }, function(_, i) {
+                var outer = getPt(100, i, radius);
+                return { x1: cx, y1: cy, x2: outer.x, y2: outer.y };
+            });
+            const dataDots = Array.from({ length: n }, function(_, i) {
+                return getPt(data[i] || 0, i, radius);
+            });
+            // 标签位置（半径外偏移）
+            const labelPositions = Array.from({ length: n }, function(_, i) {
+                var angle = angleStep * i - Math.PI / 2;
+                var lr = radius + 20;
+                return {
+                    x: cx + lr * Math.cos(angle),
+                    y: cy + lr * Math.sin(angle)
+                };
+            });
+
+            // SVG渐变定义
+            const gradientId = 'radar-grad-' + (isDark ? 'd' : 'l');
+
+            return React.createElement('div', { className: 'radar-chart-wrap' },
+                React.createElement('svg', {
+                    viewBox: '0 0 ' + size + ' ' + size,
+                    width: size,
+                    height: size,
+                    style: { maxWidth: '100%', display: 'block' }
+                },
+                    React.createElement('defs', null,
+                        React.createElement('radialGradient', { id: gradientId, cx: '50%', cy: '50%', r: '50%' },
+                            React.createElement('stop', { offset: '0%', stopColor: dataStroke,
+                                stopOpacity: 0.35 }),
+                            React.createElement('stop', { offset: '100%', stopColor: dataStroke,
+                                stopOpacity: 0.05 })
+                        )
+                    ),
+                    // 网格多边形（交替填充）
+                    gridPolygons.map(function(points, idx) {
+                        return React.createElement('polygon', {
+                            key: 'grid-' + idx,
+                            points: points,
+                            fill: idx % 2 === 0 ? gridBgEven : 'transparent',
+                            stroke: gridColor,
+                            strokeWidth: 0.6,
+                            strokeDasharray: idx < gridPolygons.length - 1 ? '3,2' : 'none'
+                        });
+                    }),
+                    // 轴线
+                    axisLines.map(function(line, idx) {
+                        return React.createElement('line', {
+                            key: 'axis-' + idx,
+                            x1: line.x1,
+                            y1: line.y1,
+                            x2: line.x2,
+                            y2: line.y2,
+                            stroke: gridColor,
+                            strokeWidth: 0.7,
+                            strokeDasharray: '2,2'
+                        });
+                    }),
+                    // 数据填充多边形
+                    React.createElement('polygon', {
+                        points: dataPolygon,
+                        fill: 'url(#' + gradientId + ')',
+                        stroke: dataStroke,
+                        strokeWidth: 1.8,
+                        strokeLinejoin: 'round'
+                    }),
+                    // 数据顶点圆点
+                    dataDots.map(function(dot, idx) {
+                        return React.createElement('circle', {
+                            key: 'dot-' + idx,
+                            cx: dot.x,
+                            cy: dot.y,
+                            r: 3.8,
+                            fill: dotFill,
+                            stroke: dotStroke,
+                            strokeWidth: 1.5
+                        });
+                    }),
+                    // 顶点标签
+                    labelPositions.map(function(pos, idx) {
+                        // 根据位置微调text-anchor
+                        var anchor = 'middle';
+                        if (pos.x < cx - 10) anchor = 'end';
+                        else if (pos.x > cx + 10) anchor = 'start';
+                        return React.createElement('text', {
+                            key: 'lbl-' + idx,
+                            x: pos.x,
+                            y: pos.y,
+                            textAnchor: anchor,
+                            dominantBaseline: 'middle',
+                            fill: labelColor,
+                            fontSize: 11,
+                            fontFamily: 'var(--font-sans)',
+                            fontWeight: 500,
+                            style: { userSelect: 'none' }
+                        }, labels[idx] || '');
+                    })
+                )
+            );
+        }
+
+        // ═══════════════ 增强版统计面板 ═══════════════
+        function Stats({ isOpen, onClose, stats, cc, gd, gs, st }) {
+            var _t = useTheme(),
+                theme = _t.theme;
+            var ms = st ? Date.now() - new Date(st).getTime() : 0;
+            var tm = Math.floor(ms / 6e4);
+            var h = Math.floor(tm / 60);
+            var m = tm % 60;
+
+            // 雷达图数据
+            var radarData = gs ? [
+                gs.happiness || 0,
+                gs.health || 0,
+                gs.ambition || 0,
+                gs.loneliness || 0,
+                gs.stress || 0
+            ] : [0, 0, 0, 0, 0];
+            var radarLabels = ['幸福', '健康', '野心', '孤独', '压力'];
+
+            // 关系数据
+            var rels = gs && gs.relationships ? gs.relationships : {};
+            var relEntries = [
+                { key: 'father', name: '父亲', icon: '\u{1F468}', cls: 'father' },
+                { key: 'mother', name: '母亲', icon: '\u{1F469}', cls: 'mother' },
+                { key: 'partner', name: '伴侣', icon: '\u{1F491}', cls: 'partner' },
+                { key: 'friends', name: '朋友', icon: '\u{1F91D}', cls: 'friends' },
+                { key: 'children', name: '子女', icon: '\u{1F476}', cls: 'children' }
+            ];
+
+            // 综合生命评分 (正面属性均值 - 负面属性均值 归一化)
+            var lifeScore = gs ? Math.round(
+                ((gs.happiness || 0) + (gs.health || 0) + (gs.ambition || 0)) / 3 * 0.7 +
+                ((100 - (gs.stress || 0)) + (100 - (gs.loneliness || 0))) / 2 * 0.3
+            ) : 0;
+            lifeScore = Math.max(0, Math.min(100, lifeScore));
+
+            // 职业与财富中文映射
+            var careerMap = {
+                'student': '学生',
+                'intern': '实习生',
+                'junior': '职场新人',
+                'mid': '中层骨干',
+                'senior': '资深专家',
+                'lead': '团队领导',
+                'exec': '高管',
+                'retired': '已退休',
+                'entrepreneur': '创业者',
+                'freelancer': '自由职业'
+            };
+            var moneyMap = {
+                'low': '拮据',
+                'lower_middle': '温饱',
+                'middle': '小康',
+                'upper_middle': '殷实',
+                'high': '富足',
+                'wealthy': '富裕'
+            };
+            var careerLabel = (gs && gs.careerStage) ? (careerMap[gs.careerStage] || gs.careerStage) : '未知';
+            var moneyLabel = (gs && gs.money) ? (moneyMap[gs.money] || gs.money) : '未知';
+
+            // 里程碑
+            var milestones = stats.milestones || [];
+
+            return React.createElement(Modal, { isOpen: isOpen, onClose: onClose, title: '人生成就 · 统计面板',
+                wide: true,
+                footer: React.createElement('button', { className: 'btn-secondary', onClick: onClose }, '关闭')
+            },
+                // ═══ 顶部概览卡片 ═══
+                React.createElement('div', { className: 'stats-grid' },
+                    React.createElement('div', { className: 'stat-card' },
+                        React.createElement('div', { className: 'stat-value' }, cc),
+                        React.createElement('div', { className: 'stat-label' }, '总选择次数')),
+                    React.createElement('div', { className: 'stat-card' },
+                        React.createElement('div', { className: 'stat-value' }, milestones.length),
+                        React.createElement('div', { className: 'stat-label' }, '里程碑')),
+                    React.createElement('div', { className: 'stat-card' },
+                        React.createElement('div', { className: 'stat-value' }, gd && gd.age || '?'),
+                        React.createElement('div', { className: 'stat-label' }, '年龄')),
+                    React.createElement('div', { className: 'stat-card' },
+                        React.createElement('div', { className: 'stat-value' }, h + 'h ' + m + 'm'),
+                        React.createElement('div', { className: 'stat-label' }, '时长')),
+                    React.createElement('div', { className: 'stat-card' },
+                        React.createElement('div', { className: 'stat-value' }, (stats.tokensUsed || 0)
+                            .toLocaleString()),
+                        React.createElement('div', { className: 'stat-label' }, 'Tokens')),
+                    React.createElement('div', { className: 'stat-card' },
+                        React.createElement('div', { className: 'stat-value' }, fmtCost(stats.estimatedCost || 0)),
+                        React.createElement('div', { className: 'stat-label' }, '费用'))
+                ),
+
+                // ═══ 双列布局：雷达图 + 关系 & 职业 ═══
+                gs && React.createElement('div', { className: 'stats-two-col' },
+                    // 左列：雷达图 + 生命评分
+                    React.createElement('div', { className: 'stats-col' },
+                        React.createElement('div', { className: 'stats-col-title' }, '人物属性雷达'),
+                        React.createElement(RadarChart, {
+                            data: radarData,
+                            labels: radarLabels,
+                            size: 240,
+                            theme: theme
+                        }),
+                        React.createElement('div', { className: 'life-score-wrap' },
+                            React.createElement('div', { className: 'life-score-label' }, '综合生命指数'),
+                            React.createElement('div', { className: 'life-score-value' }, lifeScore),
+                            React.createElement('div', { className: 'life-score-max' }, '/ 100')
+                        )
+                    ),
+                    // 右列：关系图谱 + 职业/财富标签
+                    React.createElement('div', { className: 'stats-col' },
+                        React.createElement('div', { className: 'stats-col-title' }, '人际关系'),
+                        relEntries.map(function(rel) {
+                            var val = rels[rel.key] || 0;
+                            return React.createElement('div', { key: rel.key,
+                                className: 'rel-row' },
+                                React.createElement('span', { className: 'rel-icon',
+                                    title: rel.name }, rel.icon),
+                                React.createElement('span', { className: 'rel-name' }, rel.name),
+                                React.createElement('div', { className: 'rel-track' },
+                                    React.createElement('div', {
+                                        className: 'rel-fill ' + rel.cls,
+                                        style: { width: val + '%' }
+                                    })
+                                ),
+                                React.createElement('span', { className: 'rel-val' }, val)
+                            );
+                        }),
+                        React.createElement('div', { className: 'info-badges' },
+                            React.createElement('span', { className: 'info-badge career' }, '职业：' +
+                                careerLabel),
+                            React.createElement('span', { className: 'info-badge money' }, '财富：' + moneyLabel)
+                        ),
+                        // 简要数值条
+                        React.createElement('div', { style: { marginTop: '0.8rem' } },
+                            ['happiness', 'stress', 'health', 'ambition', 'loneliness'].map(function(k) {
+                                var labels = { happiness: '幸福', stress: '压力', health: '健康',
+                                    ambition: '野心', loneliness: '孤独' };
+                                var v = gs[k] || 0;
+                                return React.createElement('div', { key: k,
+                                    className: 'state-bar-row',
+                                    style: { marginBottom: '0.35rem' } },
+                                    React.createElement('span', { className: 'state-bar-label',
+                                        style: { width: '36px', fontSize: '0.68rem' } },
+                                        labels[k]),
+                                    React.createElement('div', { className: 'state-bar-track',
+                                        style: { height: '6px' } },
+                                        React.createElement('div', {
+                                            className: 'state-bar-fill ' + k,
+                                            style: { width: v + '%' }
+                                        })
+                                    ),
+                                    React.createElement('span', {
+                                        className: 'state-bar-value',
+                                        style: { width: '24px', fontSize: '0.64rem' } }, v)
+                                );
+                            })
+                        )
+                    )
+                ),
+
+                // 无gs时的后备
+                !gs && React.createElement('p', { style: { color: 'var(--text-muted)', textAlign: 'center',
+                        padding: '1rem', fontStyle: 'italic' } }, '游戏状态数据不可用'),
+
+                // ═══ 里程碑时间线 ═══
+                milestones.length > 0 && React.createElement(React.Fragment, null,
+                    React.createElement('h4', { className: 'stats-section-title' }, '人生里程碑'),
+                    React.createElement('ul', { className: 'timeline-list' },
+                        milestones.map(function(x, i) {
+                            return React.createElement('li', { key: i },
+                                React.createElement('span', { className: 'tl-time' }, x.time || ''),
+                                React.createElement('span', null, x.event || x)
+                            );
+                        })
+                    )
+                ),
+
+                // 空里程碑提示
+                milestones.length === 0 && React.createElement('p', { style: { color: 'var(--text-muted)',
+                        textAlign: 'center', padding: '0.8rem', fontSize: '0.82rem', fontStyle: 'italic' } },
+                    '尚未触发任何里程碑，继续你的旅程吧。')
+            );
+        }
+
+        function Settings({ isOpen, onClose, apiKey, onClear }) {
+            var _a = useTheme(),
+                theme = _a.theme,
+                toggleTheme = _a.toggleTheme,
+                settings = _a.settings,
+                updateSettings = _a.updateSettings;
+            var fs = [{ v: '0.9', l: '小' }, { v: '1', l: '默认' }, { v: '1.2', l: '大' }, { v: '1.4', l: '特大' }];
+
+            return React.createElement(Modal, { isOpen: isOpen, onClose: onClose, title: '设置',
+                footer: React.createElement(React.Fragment, null,
+                    React.createElement('button', { className: 'btn-danger btn-sm', onClick: function() { if (
+                                confirm('清除所有本地数据？')) { onClear();
+                            window.location.reload(); } } }, '清除所有数据'),
+                    React.createElement('button', { className: 'btn-secondary btn-sm', onClick: onClose }, '关闭')
+                )
+            },
+                React.createElement('div', { className: 'setting-row' },
+                    React.createElement('div', null,
+                        React.createElement('div', { className: 'setting-label' }, '主题'),
+                        React.createElement('div', { className: 'setting-desc' }, theme === 'dark' ? '暗黑' : '亮色')),
+                    React.createElement('label', { className: 'toggle-switch' },
+                        React.createElement('input', { type: 'checkbox', checked: theme === 'dark',
+                            onChange: toggleTheme }),
+                        React.createElement('span', { className: 'toggle-slider' }))),
+                React.createElement('div', { className: 'setting-row' },
+                    React.createElement('div', null, React.createElement('div', { className: 'setting-label' },
+                        '字体大小')),
+                    React.createElement('div', { className: 'font-size-options' },
+                        fs.map(function(f) {
+                            return React.createElement('button', {
+                                key: f.v,
+                                className: 'font-size-btn' + (settings.fontSize === f.v ? ' active' :
+                                    ''),
+                                onClick: function() { updateSettings({ fontSize: f.v }); },
+                                style: { fontSize: 'calc(0.8rem * ' + f.v + ')' }
+                            }, f.l);
+                        }))),
+                React.createElement('div', { className: 'setting-row' },
+                    React.createElement('div', null,
+                        React.createElement('div', { className: 'setting-label' }, '费用预警阈值'),
+                        React.createElement('div', { className: 'setting-desc' }, '当前：' + fmtCost(settings
+                            .costWarn || 50))),
+                    React.createElement('select', {
+                        value: settings.costWarn || 50,
+                        onChange: function(e) { updateSettings({ costWarn: Number(e.target.value) }); },
+                        style: { padding: '0.3rem 0.5rem', borderRadius: 'var(--radius-xs)',
+                            border: '1px solid var(--border)', background: 'var(--bg-input)',
+                            color: 'var(--text)' }
+                    }, [10, 20, 50, 100, 200, 500].map(function(v) { return React.createElement(
+                            'option', { key: v, value: v }, fmtCost(v)); }))),
+                React.createElement('div', { className: 'setting-row' },
+                    React.createElement('div', null,
+                        React.createElement('div', { className: 'setting-label' }, '快捷键'),
+                        React.createElement('div', { className: 'setting-desc' }, '数字键/S/M/T/P/H等')),
+                    React.createElement('label', { className: 'toggle-switch' },
+                        React.createElement('input', { type: 'checkbox', checked: settings.shortcuts !== false,
+                            onChange: function(e) { updateSettings({ shortcuts: e.target.checked }); } }),
+                        React.createElement('span', { className: 'toggle-slider' }))),
+                React.createElement('div', { className: 'setting-row' },
+                    React.createElement('div', null,
+                        React.createElement('div', { className: 'setting-label' }, '自动存档'),
+                        React.createElement('div', { className: 'setting-desc' }, { every: '每次', every5: '每5次',
+                            every10: '每10次', never: '禁用' }[settings.autoFreq || 'every5'])),
+                    React.createElement('select', {
+                        value: settings.autoFreq || 'every5',
+                        onChange: function(e) { updateSettings({ autoFreq: e.target.value }); },
+                        style: { padding: '0.3rem 0.5rem', borderRadius: 'var(--radius-xs)',
+                            border: '1px solid var(--border)', background: 'var(--bg-input)',
+                            color: 'var(--text)' }
+                    },
+                        React.createElement('option', { value: 'every' }, '每次选择后'),
+                        React.createElement('option', { value: 'every5' }, '每5次选择'),
+                        React.createElement('option', { value: 'every10' }, '每10次选择'),
+                        React.createElement('option', { value: 'never' }, '禁用'))),
+                React.createElement('div', { className: 'setting-row' },
+                    React.createElement('div', null,
+                        React.createElement('div', { className: 'setting-label' }, 'API Key'),
+                        React.createElement('div', { className: 'setting-desc' }, maskKey(apiKey || ''))),
+                    React.createElement('button', { className: 'btn-ghost btn-sm', onClick: function() {
+                            if (confirm('更换API Key将返回首页。')) {
+                                try { sessionStorage.removeItem(SK_APIKEY); } catch (e) {}
+                                window.location.reload();
+                            }
+                        } }, '更换'))
+            );
+        }
+
+        function Help({ isOpen, onClose, settings }) {
+            var sc = [
+                { k: '1-6', d: '快速选择对应选项' }, { k: 'S', d: '快速保存游戏' },
+                { k: 'M', d: '打开存档管理器' }, { k: 'T', d: '切换主题' },
+                { k: 'P', d: '打开设置面板' }, { k: 'H', d: '打开此帮助' },
+                { k: 'I', d: '打开统计面板' }, { k: 'Esc', d: '关闭当前弹窗' }
+            ];
+            return React.createElement(Modal, { isOpen: isOpen, onClose: onClose, title: '快捷键帮助',
+                footer: React.createElement('button', { className: 'btn-secondary', onClick: onClose }, '关闭')
+            },
+                React.createElement('p', { style: { fontSize: '0.82rem', color: 'var(--text-muted)',
+                        marginBottom: '1rem' } },
+                    '状态：',
+                    settings.shortcuts !== false ?
+                    React.createElement('span', { style: { color: 'var(--success)' } }, '已启用') :
+                    React.createElement('span', { style: { color: 'var(--danger)' } }, '已禁用')),
+                sc.map(function(s) {
+                    return React.createElement('div', { key: s.k, style: { display: 'flex', alignItems: 'center',
+                            gap: '0.8rem', padding: '0.5rem 0', borderBottom: '1px solid var(--border-light)' } },
+                        React.createElement('span', { className: 'kbd', style: { minWidth: '32px',
+                                textAlign: 'center' } }, s.k),
+                        React.createElement('span', { style: { fontSize: '0.85rem', color: 'var(--text)' } },
+                        s.d));
+                })
+            );
+        }
+
+        function LifeCard({ isOpen, onClose, gd, cc, stats }) {
+            var cr = useRef(null);
+            var _a = useState(false),
+                ex = _a[0],
+                setEx = _a[1];
+
+            var png = async function() {
+                if (!cr.current) return;
+                setEx(true);
+                try {
+                    var c = await html2canvas(cr.current, { backgroundColor: '#fdf8f0', scale: 2 });
+                    var a = document.createElement('a');
+                    a.href =('image/png');
+                    a.download = '人生总结卡.png';
+                    a.click();
+                } catch (e) { alert('导出失败'); } finally { setEx(false); }
+            };
+
+            var pdf = async function() {
+                if (!cr.current) return;
+                setEx(true);
+                try {
+                    var c = await html2canvas(cr.current, { backgroundColor: '#fdf8f0', scale: 2 });
+                    var J = window.jspdf.jsPDF;
+                    var p = new J('p', 'mm', 'a5');
+                    var w = p.internal.pageSize.getWidth();
+                    p.addImage(c.toDataURL('image/png'), 'PNG', 0, 0, w, (c.height / c.width) * w);
+                    p.save('人生总结.pdf');
+                } catch (e) { alert('导出PDF失败'); } finally { setEx(false); }
+            };
+
+            var txt = function() {
+                var t = '人生模拟 总结\n年龄:' + (gd && gd.age || '?') + '岁\n选择:' + cc + '次\n阶段:' + (PHASE_LABELS[gd && gd
+                    .phase] || '?') + '\n里程碑:' + ((stats.milestones || []).map(function(m) { return m.event || m; })
+                    .join('、') || '无') + '\n费用:' + fmtCost(stats.estimatedCost || 0) + '\n\n' + (gd && gd.narrative ||
+                    '');
+                var b = new Blob([t], { type: 'text/plain;charset=utf-8' });
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(b);
+                a.download = '人生故事.txt';
+                a.click();
+            };
+
+            var ms = (stats.milestones || []).slice(-8);
+
+            return React.createElement(Modal, { isOpen: isOpen, onClose: onClose, title: '人生总结导出', wide: true,
+                footer: React.createElement(React.Fragment, null,
+                    React.createElement('button', { className: 'btn-ghost btn-sm', onClick: txt, disabled: ex },
+                        '文本'),
+                    React.createElement('button', { className: 'btn-secondary btn-sm', onClick: pdf, disabled: ex },
+                        'PDF'),
+                    React.createElement('button', { className: 'btn-primary btn-sm', onClick: png, disabled: ex },
+                        '图片'),
+                    React.createElement('button', { className: 'btn-ghost btn-sm', onClick: onClose }, '关闭')
+                )
+            },
+                ex && React.createElement('div', { className: 'loading-indicator' },
+                    React.createElement('span', null, '生成中...')),
+                React.createElement('div', { ref: cr, className: 'life-card-preview' },
+                    React.createElement('h2', null, '人生之旅'),
+                    React.createElement('div', { style: { fontSize: '0.8rem', color: '#9b8c7b', marginBottom: '0.8rem' } },
+                        '中国科大 2027级'),
+                    React.createElement('div', { className: 'card-stats' },
+                        React.createElement('div', { className: 'card-stat' },
+                            React.createElement('div', { className: 'card-stat-val' }, (gd && gd.age || 60) - 18),
+                            React.createElement('div', null, '走过岁月')),
+                        React.createElement('div', { className: 'card-stat' },
+                            React.createElement('div', { className: 'card-stat-val' }, cc),
+                            React.createElement('div', null, '次抉择')),
+                        React.createElement('div', { className: 'card-stat' },
+                            React.createElement('div', { className: 'card-stat-val' }, ms.length),
+                            React.createElement('div', null, '个里程碑'))),
+                    ms.length > 0 && React.createElement(React.Fragment, null,
+                        React.createElement('div', { style: { fontSize: '0.75rem', color: '#8b6914', marginTop: '0.8rem',
+                                marginBottom: '0.3rem', letterSpacing: '0.04em' } }, '关键里程碑'),
+                        React.createElement('ul', { className: 'card-milestones' },
+                            ms.map(function(x, i) { return React.createElement('li', { key: i }, x.event || x); }))),
+                    React.createElement('div', { className: 'card-footer' }, '活在当下，珍惜所有。 — ', new Date()
+                        .toLocaleDateString('zh-CN'))
+                )
+            );
+        }
+
+        function SaveSel({ saves, autoSave, onSelect, onBack }) {
+            var all = useMemo(function() {
+                var l = [].concat(saves);
+                if (autoSave && !l.find(function(s) { return s.id === autoSave.id; }))
+                    l.unshift(Object.assign({}, autoSave, { name: '自动存档', isAuto: true }));
+                l.sort(function(a, b) { return new Date(b.updatedAt) - new Date(a.updatedAt); });
+                return l;
+            }, [saves, autoSave]);
+
+            return React.createElement('div', { className: 'setup-container' },
+                React.createElement('div', { className: 'setup-card', style: { maxWidth: '620px' } },
+                    React.createElement('h1', null, '继续游戏'),
+                    React.createElement('p', { className: 'subtitle' }, '选择存档加载'),
+                    React.createElement('div', { className: 'decor-line' }),
+                    all.length === 0 ?
+                    React.createElement('p', { style: { color: 'var(--text-muted)', padding: '2rem',
+                            textAlign: 'center' } }, '暂无存档。') :
+                    all.map(function(s) {
+                        return React.createElement('div', { key: s.id, className: 'save-item',
+                                onClick: function() { onSelect(s); }, style: { marginBottom: '0.7rem' } },
+                            React.createElement('div', { className: 'save-icon' }, s.isAuto ? 'O' : 'S'),
+                            React.createElement('div', { className: 'save-info' },
+                                React.createElement('div', { className: 'save-name' }, s.name),
+                                React.createElement('div', { className: 'save-meta' },
+                                    React.createElement('span', null, s.gameData && s.gameData.age || '?',
+                                        '岁'),
+                                    React.createElement('span', null, PHASE_LABELS[s.gameData && s.gameData
+                                        .phase] || '未知'),
+                                    React.createElement('span', null, s.choiceCount, '次'),
+                                    React.createElement('span', null, fmtDate(s.updatedAt))))
+                        );
+                    }),
+                    React.createElement('div', { style: { marginTop: '1.2rem', display: 'flex', gap: '0.8rem',
+                            justifyContent: 'center' } },
+                        React.createElement('button', { className: 'btn-secondary', onClick: onBack },
+                        '返回开始新游戏'))
+                )
+            );
+        }
+
+        // ═══════════════ 主游戏组件 ═══════════════
+        function GameApp({ apiKey, onReset, initialSaveData }) {
+            var _t = useTheme(),
+                theme = _t.theme,
+                toggleTheme = _t.toggleTheme,
+                settings = _t.settings;
+            var _s = useGameSave(),
+                saves = _s.saves,
+                sAuto = _s.autoSave,
+                createSave = _s.createSave,
+                updateSave = _s.updateSave,
+                deleteSave = _s.deleteSave,
+                renameSave = _s.renameSave,
+                exportSave = _s.exportSave,
+                importSave = _s.importSave,
+                persistAutoSave = _s.persistAutoSave,
+                clearAllSaves = _s.clearAllSaves;
+            var _g = useGameState(initialSaveData && initialSaveData.gameState || DEFAULT_GS),
+                gs = _g.state,
+                applyChoiceEffects = _g.applyChoiceEffects,
+                addKeyEvent = _g.addKeyEvent,
+                restoreState = _g.restoreState,
+                getStateSummary = _g.getStateSummary;
+
+            var _a = useState(initialSaveData && initialSaveData.gameData || null),
+                gd = _a[0],
+                setGD = _a[1];
+            var _b = useState(false),
+                loading = _b[0],
+                setLoading = _b[1];
+            var _c = useState(null),
+                err = _c[0],
+                setErr = _c[1];
+            var _d = useState(initialSaveData && initialSaveData.choiceCount || 0),
+                cc = _d[0],
+                setCC = _d[1];
+            var _e = useState(initialSaveData && initialSaveData.gameData && initialSaveData.gameData.isEnd || false),
+                end = _e[0],
+                setEnd = _e[1];
+            var _f = useState(null),
+                lt = _f[0],
+                setLt = _f[1];
+            var _g2 = useState(false),
+                showTop = _g2[0],
+                setShowTop = _g2[1];
+            var _h = useState(null),
+                toast = _h[0],
+                setToast = _h[1];
+            var _i = useState(null),
+                tFloat = _i[0],
+                setTFloat = _i[1];
+            var _j = useState(false),
+                costWarn = _j[0],
+                setCostWarn = _j[1];
+            var _k = useState(0),
+                retry = _k[0],
+                setRetry = _k[1];
+            var _l = useState(false),
+                modSM = _l[0],
+                setModSM = _l[1];
+            var _m = useState(false),
+                modSt = _m[0],
+                setModSt = _m[1];
+            var _n = useState(false),
+                modSe = _n[0],
+                setModSe = _n[1];
+            var _o = useState(false),
+                modH = _o[0],
+                setModH = _o[1];
+            var _p = useState(false),
+                modLC = _p[0],
+                setModLC = _p[1];
+
+            var _q = useState(initialSaveData && initialSaveData.stats || {
+                totalChoices: 0,
+                milestones: [],
+                phaseHistory: [],
+                tokensUsed: 0,
+                estimatedCost: 0,
+                startTime: new Date().toISOString(),
+                lastPlayTime: new Date().toISOString()
+            }),
+                stats = _q[0],
+                setStats = _q[1];
+
+            var cvRef = useRef(initialSaveData && initialSaveData.conversationHistory || []);
+            var smRef = useRef(initialSaveData && initialSaveData.summary || '');
+            var started = useRef(!!initialSaveData);
+            var acRef = useRef(null);
+            var topRef = useRef(null);
+            var cwDismissed = useRef(false);
+            var lastCompressCC = useRef(initialSaveData ? initialSaveData.choiceCount || 0 : 0);
+
+            useEffect(function() {
+                var h = function() { setShowTop(window.scrollY > 400); };
+                window.addEventListener('scroll', h, { passive: true });
+                return function() { window.removeEventListener('scroll', h); };
+            }, []);
+
+            var buildAuto = useCallback(function() {
+                return {
+                    id: 'autosave',
+                    name: '自动存档',
+                    gameData: gd,
+                    conversationHistory: cvRef.current,
+                    summary: smRef.current,
+                    choiceCount: cc,
+                    stats: Object.assign({}, stats, { lastPlayTime: new Date().toISOString() }),
+                    gameState: gs,
+                    createdAt: stats.startTime,
+                    updatedAt: new Date().toISOString(),
+                    version: SAVE_VERSION
+                };
+            }, [gd, cc, stats, gs]);
+
+            useEffect(function() {
+                if (started.current && !end) {
+                    var h = function() { if (gd && cvRef.current.length > 2) persistAutoSave(buildAuto()); };
+                    window.addEventListener('beforeunload', h);
+                    return function() { window.removeEventListener('beforeunload', h); };
+                }
+            }, [gd, cc, stats, end, gs]);
+
+            useEffect(function() {
+                if (!gd || !started.current || end) return;
+                var f = settings.autoFreq || 'every5';
+                if (f === 'never') return;
+                if (f === 'every' && cc < 1) return;
+                if (f === 'every5' && cc % 5 !== 0) return;
+                if (f === 'every10' && cc % 10 !== 0) return;
+                persistAutoSave(buildAuto());
+            }, [cc]);
+
+            useEffect(function() {
+                var th = settings.costWarn || 50;
+                if ((stats.estimatedCost || 0) >= th && !cwDismissed.current && !end && started.current)
+                    setCostWarn(true);
+            }, [stats.estimatedCost, settings.costWarn, end]);
+
+            // ═══════ API 调用 ═══════
+            var callAPI = useCallback(async function(msgs) {
+                acRef.current = new AbortController();
+                var tid = setTimeout(function() { if (acRef.current) acRef.current.abort(); },
+                REQUEST_TIMEOUT_MS);
+                try {
+                    var resp = await fetch(DEEPSEEK_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + apiKey },
+                        body: JSON.stringify({ model: MODEL_NAME, messages: msgs, temperature: TEMPERATURE,
+                            max_tokens: MAX_TOKENS, response_format: { type: 'json_object' } }),
+                        signal: acRef.current.signal
+                    });
+                    clearTimeout(tid);
+                    if (!resp.ok) {
+                        var eb = await resp.text().catch(function() { return ''; });
+                        var em = 'API错误(' + resp.status + ')';
+                        if (resp.status === 401) em = 'API Key无效';
+                        else if (resp.status === 402) em = '余额不足';
+                        else if (resp.status === 429) em = '请求频繁，请稍后再试';
+                        else if (resp.status >= 500) em = '服务器错误';
+                        if (eb) { try { var ej = JSON.parse(eb); if (ej.error && ej.error.message) em += '：' + ej
+                                .error.message; } catch (e) {} }
+                        throw new Error(em);
+                    }
+                    var result = await resp.json();
+                    var content = result.choices && result.choices[0] && result.choices[0].message && result
+                        .choices[0].message.content;
+                    if (!content) throw new Error('返回空内容');
+                    if (result.usage) {
+                        var pt = result.usage.prompt_tokens || 0;
+                        var ct = result.usage.completion_tokens || 0;
+                        var tt = result.usage.total_tokens || (pt + ct);
+                        var cost = estCost(pt, ct);
+                        setLt({ prompt: pt, completion: ct, total: tt, cost: cost });
+                        setTFloat({ total: tt, cost: cost, id: Date.now() });
+                        setStats(function(pr) {
+                            return Object.assign({}, pr, {
+                                tokensUsed: (pr.tokensUsed || 0) + tt,
+                                estimatedCost: (pr.estimatedCost || 0) + cost
+                            });
+                        });
+                    }
+                    var finishReason = result.choices && result.choices[0] && result.choices[0].finish_reason;
+                    if (finishReason === 'length') {
+                        console.warn('输出被截断，尝试修复JSON');
+                    }
+                    var parsed = parseJSON(content);
+                    if (!parsed) throw new Error('JSON解析完全失败');
+                    if (typeof parsed.age !== 'number') parsed.age = gd && gd.age ? gd.age : 18;
+                    if (!parsed.time || typeof parsed.time !== 'string') parsed.time = '?';
+                    if (!parsed.phase || typeof parsed.phase !== 'string') parsed.phase = gd && gd.phase ? gd
+                        .phase : 'college';
+                    if (parsed.isEnd !== true) parsed.isEnd = false;
+                    if (parsed.milestone === undefined || parsed.milestone === null) parsed.milestone = null;
+                    if (typeof parsed.narrative !== 'string' || parsed.narrative.trim().length === 0) {
+                        parsed.narrative = '故事继续...';
+                    }
+                    if (!parsed.isEnd) {
+                        if (!Array.isArray(parsed.choices)) parsed.choices = [];
+                        parsed.choices = parsed.choices.filter(function(c) {
+                            return c && c.text && typeof c.text === 'string' && c.text.trim().length > 0;
+                        }).map(function(c) { return { text: c.text.trim() }; });
+                        if (parsed.choices.length < 2) {
+                            var fallbacks = makeFallbackChoices(parsed.narrative || '故事继续', parsed.age || 18,
+                                parsed.phase || 'college');
+                            while (parsed.choices.length < 4 && fallbacks.length > 0) {
+                                parsed.choices.push(fallbacks.shift());
+                            }
+                        }
+                        if (parsed.choices.length === 0) {
+                            parsed.choices = [
+                                { text: '继续前行' },
+                                { text: '停下思考' },
+                                { text: '寻求帮助' },
+                                { text: '换个角度' }
+                            ];
+                        }
+                    } else {
+                        parsed.choices = [];
+                    }
+                    return parsed;
+                } finally { clearTimeout(tid); }
+            }, [apiKey, gd]);
+
+            var callWithRetry = useCallback(async function(msgs) {
+                var le = null;
+                for (var i = 0; i < MAX_RETRIES; i++) {
+                    try {
+                        setRetry(i);
+                        return await callAPI(msgs);
+                    } catch (er) {
+                        le = er;
+                        if (er.name === 'AbortError') throw er;
+                        if (i < MAX_RETRIES - 1)
+                            await new Promise(function(r) { setTimeout(r, RETRY_BASE_DELAY * Math.pow(2, i)); });
+                    }
+                }
+                throw le || new Error('API调用失败');
+            }, [callAPI]);
+
+            // ═══════ 强制压缩机制 ═══════
+            var compress = useCallback(async function(msgs, existingSummary) {
+                if (msgs.length <= MAX_RECENT_MESSAGES + 2) return { msgs: msgs, summary: existingSummary };
+                var tc = msgs.slice(1, msgs.length - MAX_RECENT_MESSAGES);
+                var rc = msgs.slice(msgs.length - MAX_RECENT_MESSAGES);
+                try {
+                    var resp = await fetch(DEEPSEEK_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + apiKey },
+                        body: JSON.stringify({
+                            model: MODEL_NAME,
+                            messages: [
+                                { role: 'system', content: '你是故事摘要助手。用400-600字中文文学性摘要，保留关键事件、人物关系变化、情感转折。' },
+                                { role: 'user', content: '请摘要以下对话历史：\n' + tc.map(function(m) { return '[' + m
+                                        .role + ']: ' + m.content.substring(0, 600); }).join('\n\n') }
+                            ],
+                            temperature: 0.5,
+                            max_tokens: 1000
+                        })
+                    });
+                    if (resp.ok) {
+                        var r = await resp.json();
+                        var st = r.choices && r.choices[0] && r.choices[0].message && r.choices[0].message
+                            .content || '';
+                        var ns = (existingSummary ? existingSummary + '\n\n---\n\n' : '') + st;
+                        return { msgs: [msgs[0], { role: 'system', content: '【前情摘要】\n' + ns }, ...rc],
+                            summary: ns };
+                    }
+                } catch (e) {}
+                return { msgs: [msgs[0], { role: 'system', content: (existingSummary || '') +
+                            '\n[部分历史已省略]' }, ...rc], summary: existingSummary };
+            }, [apiKey]);
+
+            var maybeCompress = useCallback(async function(msgs, currentCC) {
+                var needByLength = msgs.length > MAX_RECENT_MESSAGES + 4;
+                var needByFreq = (currentCC - lastCompressCC.current) >= FORCE_COMPRESS_EVERY;
+                if (needByLength || needByFreq) {
+                    var result = await compress(msgs, smRef.current);
+                    lastCompressCC.current = currentCC;
+                    return result;
+                }
+                return { msgs: msgs, summary: smRef.current };
+            }, [compress]);
+
+            // ═══════ 初始化游戏 ═══════
+            var init = useCallback(async function() {
+                setLoading(true);
+                setErr(null);
+                setRetry(0);
+                cvRef.current = [
+                    { role: 'system', content: bsp(gs, 18, 'freshman', 0) },
+                    { role: 'user', content: '开始游戏。生成中国科大2027级新生报到入学第一幕。用第二人称"你"。时间设定为2027年9月。' }
+                ];
+                smRef.current = '';
+                lastCompressCC.current = 0;
+                var d = await callWithRetry(cvRef.current);
+                if (d) {
+                    if (!d.isEnd && (!d.choices || d.choices.length === 0)) {
+                        d.choices = makeFallbackChoices(d.narrative || '开始冒险', 18, 'freshman');
+                    }
+                    setGD(d);
+                    setCC(1);
+                    setStats(function(pr) {
+                        return Object.assign({}, pr, {
+                            totalChoices: 1,
+                            startTime: pr.startTime || new Date().toISOString(),
+                            phaseHistory: [{ phase: d.phase, age: d.age, time: d.time, choiceCount: 1 }],
+                            milestones: d.milestone ? [{ time: d.time, event: d.milestone }] : []
+                        });
+                    });
+                    started.current = true;
+                    if (d.milestone) addKeyEvent({ time: d.time, event: d.milestone });
+                    cvRef.current.push({ role: 'assistant', content: JSON.stringify(d) });
+                }
+                setLoading(false);
+            }, [gs]);
+
+            useEffect(function() {
+                if (!initialSaveData && !started.current) init();
+                else if (initialSaveData && !started.current) {
+                    started.current = true;
+                    var initial_gd = initialSaveData.gameData;
+                    if (initial_gd && !initial_gd.isEnd && (!initial_gd.choices || initial_gd.choices.length ===
+                            0)) {
+                        initial_gd.choices = makeFallbackChoices(initial_gd.narrative || '继续冒险', initial_gd.age ||
+                            18, initial_gd.phase || 'college');
+                    }
+                    setGD(initial_gd);
+                    setCC(initialSaveData.choiceCount);
+                    setStats(initialSaveData.stats || {
+                        totalChoices: initialSaveData.choiceCount,
+                        milestones: [],
+                        phaseHistory: [],
+                        tokensUsed: 0,
+                        estimatedCost: 0,
+                        startTime: new Date().toISOString(),
+                        lastPlayTime: new Date().toISOString()
+                    });
+                    if (initialSaveData.gameData && initialSaveData.gameData.isEnd) setEnd(true);
+                    if (initialSaveData.gameState) restoreState(initialSaveData.gameState);
+                    lastCompressCC.current = initialSaveData.choiceCount || 0;
+                }
+                return function() { if (acRef.current) acRef.current.abort(); };
+            }, []);
+
+            // ═══════ 选择处理 ═══════
+            var choose = useCallback(async function(txt) {
+                if (end || loading) return;
+                setLoading(true);
+                setErr(null);
+                setRetry(0);
+                applyChoiceEffects(txt);
+                var nc = cc + 1;
+                var sum = getStateSummary(nc);
+                var dc = shouldDie(gs, gd && gd.age || 18, nc);
+                var fe = dc.trigger && gd;
+                var upSys = bsp(gs, gd && gd.age || 18, gd && gd.phase || 'college', nc);
+                var userContent = '我选择：' + txt;
+                if (fe) userContent += '\n[触发死亡条件，请生成终局叙事。isEnd设为true，choices设为空数组。]';
+                var um = { role: 'user', content: userContent };
+                var ms = [].concat(cvRef.current);
+                if (ms[0] && ms[0].role === 'system') ms[0] = { role: 'system', content: upSys };
+                ms.push(um);
+                try {
+                    var cp = await maybeCompress(ms, nc);
+                    ms = cp.msgs;
+                    smRef.current = cp.summary;
+                } catch (e) {
+                    if (ms.length > MAX_RECENT_MESSAGES + 4) {
+                        ms = [ms[0], { role: 'system', content: (smRef.current || '') + '\n[部分历史已省略]' }, ...ms.slice(-
+                                MAX_RECENT_MESSAGES)];
+                    }
+                }
+                try {
+                    var d = await callWithRetry(ms);
+                    if (d) {
+                        if (!d.isEnd && (!d.choices || d.choices.length === 0)) {
+                            d.choices = makeFallbackChoices(d.narrative || '故事继续', d.age || 18, d.phase ||
+                                'college');
+                        }
+                        setGD(d);
+                        setCC(nc);
+                        if (d.isEnd) setEnd(true);
+                        setStats(function(pr) {
+                            return Object.assign({}, pr, {
+                                totalChoices: nc,
+                                milestones: d.milestone ? [].concat(pr.milestones, [{ time: d.time,
+                                    event: d.milestone }]) : pr.milestones,
+                                phaseHistory: [].concat(pr.phaseHistory, [{ phase: d.phase, age: d.age,
+                                    time: d.time, choiceCount: nc }]),
+                                lastPlayTime: new Date().toISOString()
+                            });
+                        });
+                        if (d.milestone) addKeyEvent({ time: d.time, event: d.milestone });
+                        cvRef.current = [].concat(ms, [{ role: 'assistant', content: JSON.stringify(d) }]);
+                    }
+                } catch (er) {
+                    if (er.name === 'AbortError') setErr('请求超时（90秒），请重试。');
+                    else setErr(er.message || '请求失败');
+                } finally { setLoading(false);
+                    setRetry(0); }
+            }, [end, loading, callWithRetry, maybeCompress, cc, gd, gs, applyChoiceEffects, getStateSummary,
+                addKeyEvent
+            ]);
+
+            var retryAct = useCallback(function() {
+                setErr(null);
+                var lu = [].concat(cvRef.current).reverse().find(function(m) { return m.role === 'user'; });
+                if (lu) {
+                    var ct = lu.content.replace(/^我选择：/, '').replace(/\n\[.*\]/, '');
+                    if (ct) { cvRef.current = cvRef.current.slice(0, -1);
+                        choose(ct); } else init();
+                } else init();
+            }, [choose, init]);
+
+            var manualSave = useCallback(function() {
+                if (!gd) return;
+                var sv = createSave(
+                    '存档 - ' + gd.age + '岁 ' + (PHASE_SHORT[gd.phase] || ''),
+                    gd, cvRef.current, smRef.current, cc,
+                    Object.assign({}, stats, { lastPlayTime: new Date().toISOString() }), gs
+                );
+                setToast('已保存：' + sv.name);
+                setTimeout(function() { setToast(null); }, 2000);
+            }, [gd, cc, stats, gs, createSave]);
+
+            var loadSave = useCallback(function(sv) {
+                if (!sv || !sv.gameData) return;
+                if (started.current && !end) { if (!confirm('加载存档将覆盖当前进度，确定？')) return; }
+                var gd_load = JSON.parse(JSON.stringify(sv.gameData));
+                if (gd_load && !gd_load.isEnd && (!gd_load.choices || gd_load.choices.length === 0)) {
+                    gd_load.choices = makeFallbackChoices(gd_load.narrative || '继续冒险', gd_load.age || 18, gd_load
+                        .phase || 'college');
+                }
+                if (!gd_load.choices || !Array.isArray(gd_load.choices)) {
+                    gd_load.choices = makeFallbackChoices(gd_load.narrative || '继续冒险', gd_load.age || 18, gd_load
+                        .phase || 'college');
+                }
+                setGD(gd_load);
+                setCC(sv.choiceCount);
+                setStats(sv.stats || {
+                    totalChoices: sv.choiceCount,
+                    milestones: [],
+                    phaseHistory: [],
+                    tokensUsed: 0,
+                    estimatedCost: 0,
+                    startTime: new Date().toISOString(),
+                    lastPlayTime: new Date().toISOString()
+                });
+                cvRef.current = sv.conversationHistory || [];
+                smRef.current = sv.summary || '';
+                setEnd(sv.gameData && sv.gameData.isEnd === true || false);
+                if (sv.gameState) restoreState(sv.gameState);
+                setLoading(false);
+                started.current = true;
+                lastCompressCC.current = sv.choiceCount || 0;
+                setErr(null);
+                setModSM(false);
+                setLt(null);
+                cwDismissed.current = false;
+            }, [end, restoreState]);
+
+            var clearAll = useCallback(function() {
+                clearAllSaves();
+                try { sessionStorage.removeItem(SK_APIKEY);
+                    localStorage.removeItem(SK_SETTINGS); } catch (e) {}
+            }, [clearAllSaves]);
+
+            // 快捷键
+            useEffect(function() {
+                if (settings.shortcuts === false) return;
+                var h = function(e) {
+                    if (['INPUT', 'TEXTAREA', 'SELECT'].indexOf(e.target.tagName) >= 0) return;
+                    var k = e.key.toLowerCase();
+                    if (k >= '1' && k <= '6' && !end && !loading && gd && gd.choices) {
+                        var i = parseInt(k) - 1;
+                        if (i < gd.choices.length) choose(gd.choices[i].text);
+                    }
+                    if (k === 's' && !e.ctrlKey && !e.metaKey) { e.preventDefault();
+                        manualSave(); }
+                    if (k === 'm') { e.preventDefault();
+                        setModSM(function(p) { return !p; }); }
+                    if (k === 't' && !e.ctrlKey) { e.preventDefault();
+                        toggleTheme(); }
+                    if (k === 'p') { e.preventDefault();
+                        setModSe(function(p) { return !p; }); }
+                    if (k === 'h') { e.preventDefault();
+                        setModH(function(p) { return !p; }); }
+                    if (k === 'i') { e.preventDefault();
+                        setModSt(function(p) { return !p; }); }
+                    if (k === 'escape') {
+                        if (modSM) setModSM(false);
+                        else if (modSt) setModSt(false);
+                        else if (modSe) setModSe(false);
+                        else if (modH) setModH(false);
+                        else if (modLC) setModLC(false);
+                    }
+                };
+                document.addEventListener('keydown', h);
+                return function() { document.removeEventListener('keydown', h); };
+            }, [settings.shortcuts, end, loading, gd, choose, manualSave, toggleTheme, modSM, modSt, modSe, modH,
+                modLC
+            ]);
+
+            var prog = useMemo(function() {
+                if (!gd) return [];
+                var ci = PHASE_ORDER.indexOf(gd.phase);
+                return PHASE_ORDER.map(function(p, i) {
+                    return { phase: p, label: PHASE_SHORT[p], status: i < ci ? 'completed' : i === ci ?
+                            'current' : 'upcoming' };
+                });
+            }, [gd && gd.phase]);
+
+            var agePct = useMemo(function() {
+                return Math.min(100, ((gd && gd.age || 18) / 100) * 100);
+            }, [gd && gd.age]);
+
+            if (!gd && loading) return React.createElement('div', { className: 'game-container', ref: topRef },
+                React.createElement('div', { className: 'narrative-card' },
+                    React.createElement('div', { className: 'loading-indicator' },
+                        React.createElement('span', null, '编织人生故事中'),
+                        React.createElement('div', { className: 'loading-dots' },
+                            React.createElement('span'), React.createElement('span'), React.createElement(
+                                'span')))));
+
+            if (!gd && err) return React.createElement('div', { className: 'game-container', ref: topRef },
+                React.createElement('div', { className: 'error-banner' },
+                    React.createElement('span', null, err),
+                    React.createElement('span', { className: 'retry-link', onClick: retryAct }, ' 重试')),
+                React.createElement('div', { style: { textAlign: 'center', marginTop: '2rem' } },
+                    React.createElement('button', { className: 'btn-secondary', onClick: onReset }, '返回首页')));
+
+            if (!gd) return null;
+
+            return React.createElement('div', { className: 'game-container', ref: topRef },
+                React.createElement('div', { className: 'top-bar' },
+                    React.createElement('div', { className: 'meta-group' },
+                        React.createElement('div', { className: 'meta-item' }, gd.time || '?'),
+                        React.createElement('div', { className: 'meta-item' }, (gd.age || 18) + '岁'),
+                        React.createElement('span', { className: 'phase-tag' }, PHASE_LABELS[gd.phase] || gd
+                            .phase)),
+                    React.createElement('span', { className: 'counter-badge' }, '第' + cc + '次选择')),
+                React.createElement('div', { className: 'age-progress-wrap' },
+                    React.createElement('span', { className: 'age-label' }, '0'),
+                    React.createElement('div', { className: 'age-progress-bar' },
+                        React.createElement('div', { className: 'age-progress-fill', style: { width: agePct +
+                                '%' } }),
+                        React.createElement('div', { className: 'age-progress-marker', style: { left: agePct +
+                                '%' } })),
+                    React.createElement('span', { className: 'age-label' }, '100')),
+                React.createElement('div', { className: 'tool-bar' },
+                    React.createElement('button', { className: 'tool-btn', onClick: manualSave, title: '快速保存 (S)' },
+                        React.createElement('span', null, '保存'), React.createElement('span', {
+                            className: 'shortcut-hint' }, 'S')),
+                    React.createElement('button', { className: 'tool-btn', onClick: function() { setModSM(true); },
+                        title: '存档管理 (M)' },
+                        React.createElement('span', null, '读档'), React.createElement('span', {
+                            className: 'shortcut-hint' }, 'M')),
+                    React.createElement('button', { className: 'tool-btn', onClick: function() { setModSt(true); },
+                        title: '统计 (I)' },
+                        React.createElement('span', null, '统计'), React.createElement('span', {
+                            className: 'shortcut-hint' }, 'I')),
+                    React.createElement('button', { className: 'tool-btn', onClick: function() { setModSe(true); },
+                        title: '设置 (P)' },
+                        React.createElement('span', null, '设置'), React.createElement('span', {
+                            className: 'shortcut-hint' }, 'P')),
+                    React.createElement('button', { className: 'tool-btn', onClick: function() { setModH(true); },
+                        title: '帮助 (H)' },
+                        React.createElement('span', null, '帮助'), React.createElement('span', {
+                            className: 'shortcut-hint' }, 'H')),
+                    React.createElement('button', { className: 'tool-btn', onClick: toggleTheme, title: '切换主题 (T)' },
+                        React.createElement('span', null, theme === 'light' ? '暗色' : '亮色'), React.createElement(
+                            'span', { className: 'shortcut-hint' }, 'T'))),
+                costWarn && React.createElement('div', { className: 'cost-warning-banner' },
+                    React.createElement('span', null, '累计费用已达 ' + fmtCost(stats.estimatedCost || 0) +
+                        '。可在设置中调整预警阈值。'),
+                    React.createElement('span', { className: 'dismiss', onClick: function() { setCostWarn(false);
+                            cwDismissed.current = true; } }, 'x')),
+                React.createElement('div', { className: 'progress-bar-container' },
+                    prog.map(function(item, idx) {
+                        return React.createElement(React.Fragment, { key: item.phase },
+                            idx > 0 && React.createElement('div', { className: 'progress-line' + (item.status ===
+                                    'completed' || item.status === 'current' ? ' completed' : '') }),
+                            React.createElement('div', { className: 'progress-phase', title: PHASE_LABELS[item
+                                    .phase], onClick: function() { setModSt(true); } },
+                                React.createElement('div', { className: 'progress-dot ' + item.status }, item
+                                    .status === 'completed' ? 'V' : item.status === 'current' ? '>' : 'o'),
+                                React.createElement('div', { className: 'progress-label' }, item.label)));
+                    })),
+                err && React.createElement('div', { className: 'error-banner' },
+                    React.createElement('span', null, err, React.createElement('span', { className: 'retry-link',
+                            onClick: retryAct }, ' 重试')),
+                    retry > 0 && React.createElement('span', { className: 'retry-progress' }, ' (重试 ' + retry +
+                        '/' + MAX_RETRIES + ')')),
+                React.createElement('div', { className: 'narrative-card' },
+                    gd.milestone && !end && React.createElement('div', { className: 'milestone-badge' }, gd
+                        .milestone),
+                    end && React.createElement('div', { className: 'end-badge' }, '人生终章'),
+                    React.createElement('div', { className: 'narrative-text' }, gd.narrative)),
+                lt && !loading && React.createElement('div', { className: 'token-info-row' },
+                    React.createElement('span', null, '+' + lt.total.toLocaleString() + ' tokens'),
+                    React.createElement('span', null, fmtCost(lt.cost)),
+                    React.createElement('span', null, '累计 ' + (stats.tokensUsed || 0).toLocaleString() +
+                        ' tokens'),
+                    React.createElement('span', { className: (stats.estimatedCost || 0) >= (settings.costWarn ||
+                            50) ? 'cost-warn' : '' }, fmtCost(stats.estimatedCost || 0))),
+                loading && React.createElement('div', { className: 'loading-indicator' },
+                    React.createElement('span', null, '时光流转中'),
+                    React.createElement('div', { className: 'loading-dots' },
+                        React.createElement('span'), React.createElement('span'), React.createElement('span')),
+                    retry > 0 && React.createElement('span', { style: { fontSize: '0.7rem', marginLeft: '0.5rem' } },
+                        '(重试' + retry + '/' + MAX_RETRIES + ')')),
+                !end && !loading && gd.choices && gd.choices.length > 0 && React.createElement('div', {
+                    className: 'choices-section' },
+                    React.createElement('div', { className: 'soft-divider' }),
+                    React.createElement('p', { className: 'choices-header' }, '你如何选择？'),
+                    gd.choices.filter(function(ch) {
+                        return ch && ch.text && typeof ch.text === 'string' && ch.text.trim().length > 0;
+                    }).map(function(ch, idx) {
+                        var txt = ch.text && typeof ch.text === 'string' ? ch.text.trim() : '';
+                        return txt ? React.createElement('button', { key: idx, className: 'choice-btn',
+                            onClick: function() { choose(txt); }, disabled: loading },
+                            React.createElement('span', { className: 'choice-number' }, idx + 1),
+                            React.createElement('span', null, txt)) : null;
+                    }).filter(function(el) { return el !== null; })),
+                !end && !loading && settings.shortcuts !== false && React.createElement('p', { style: { fontSize: '0.65rem',
+                        color: 'var(--text-muted)', textAlign: 'center', marginTop: '0.3rem' } },
+                    '按 1-' + (gd.choices && gd.choices.length || 4) + ' 快速选择'),
+                end && !loading && React.createElement('div', { className: 'restart-section' },
+                    React.createElement('div', { className: 'soft-divider' }),
+                    React.createElement('p', { className: 'end-message' }, '你走过了 ' + ((gd.age || 60) - 18) +
+                        ' 年，做出了 ' + cc + ' 次选择。'),
+                    React.createElement('div', { style: { display: 'flex', gap: '0.7rem', justifyContent: 'center',
+                            flexWrap: 'wrap' } },
+                        React.createElement('button', { className: 'btn-primary', onClick: onReset }, '重新开始'),
+                        React.createElement('button', { className: 'btn-secondary', onClick: manualSave }, '保存'),
+                        React.createElement('button', { className: 'btn-secondary', onClick: function() { setModLC(
+                                true); } }, '导出总结'))),
+                React.createElement('button', { className: 'scroll-top-btn' + (showTop ? ' visible' : ''),
+                    onClick: function() { window.scrollTo({ top: 0, behavior: 'smooth' }); } }, '^'),
+                tFloat && React.createElement('div', { className: 'token-float', key: tFloat.id }, '+' + tFloat.total
+                    .toLocaleString() + ' tokens'),
+                toast && React.createElement('div', { className: 'toast' }, toast),
+                React.createElement(SaveMgr, { isOpen: modSM, onClose: function() { setModSM(false); },
+                    saves: saves, autoSave: sAuto, onLoad: loadSave, onDel: deleteSave, onRen: renameSave,
+                    onExp: exportSave, onImp: importSave, onClr: clearAllSaves, running: started.current && !end }),
+                React.createElement(Stats, { isOpen: modSt, onClose: function() { setModSt(false); },
+                    stats: stats, cc: cc, gd: gd, gs: gs, st: stats.startTime }),
+                React.createElement(Settings, { isOpen: modSe, onClose: function() { setModSe(false); },
+                    apiKey: apiKey, onClear: clearAll }),
+                React.createElement(Help, { isOpen: modH, onClose: function() { setModH(false); },
+                settings: settings }),
+                React.createElement(LifeCard, { isOpen: modLC, onClose: function() { set(false════           ) ''a1(false),
+                sel = _b[0],
+                setSel = _b[1];
+            var _c = useState(null),
+                ld = _c[0],
+                setLd = _cSave = _d.autoSave,
+                hasAnySave = _d.hasAnySave;
+
+            var hk = useCallback(function(k) {
+                setKey(k);
+                try { sessionStorage.setItem(SK_APIKEY, enc(k)); } catch (e) {}
+            }, []);
+
+            var hr = useCallback(function() {
+                setKey('');
+                setLd(null);
+                setSel(false);
+                try { sessionStorage.removeItem(SK_APIKEY); } catch (e) {}
+            }, []);
+
+            var hc = useCallback(function() { setSel(true); }, []);
+
+            var hs = useCallback(function(s) {
+                setLd(s);
+                setSel(false);
+                var e = sessionStorage.getItem(SK_APIKEY);
+                var k = e ? dec(e) : '';
+                if (!k) { alert('请先设置API Key。');
+                    hr(); return; }
+                setKey(k);
+            }, [hr]);
+
+            if (sel && !key) {
+                var e = sessionStorage.getItem(SK_APIKEY);
+                var k = e ? dec(e) : '';
+                if (k) setKey(k);
+                else setSel(false);
+            }
+
+            if (sel && key) return React.createElement(ThemeP, null,
+                React.createElement(EB, null,
+                    React.createElement(SaveSel, { saves: saves, autoSave: autoSave, onSelect: hs, onBack: function() {
+                            setSel(false);
+                            setLd(null); } })));
+
+            if (!key) return React.createElement(ThemeP, null,
+                React.createElement(EB, null,
+                    React.createElement(ApiKeySetup, { onKeySet: hk, hasSaves: hasAnySave, onContinueGame: hc,
+                        autoSave: autoSave, saves: saves })));
+
+            return React.createElement(ThemeP, null,
+                React.createElement(EB, null,
+                    React.createElement(GameApp, { key: key + (ld && ld.id || 'new'), apiKey: key, onReset: hr,
+                        initialSaveData: ld })));
+        }
+
+        var root = createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
+</body>
+</html>
